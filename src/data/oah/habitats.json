@@ -1,0 +1,22 @@
+[
+ {
+  "code": "SB",
+  "name": "Sand banks (A)"
+ },
+ {
+  "code": "SI",
+  "name": "Sand islands (B)"
+ },
+ {
+  "code": "RF",
+  "name": "Riffles, rapids, falls (D)"
+ },
+ {
+  "code": "AV",
+  "name": "Aquatic vegetation (E)"
+ },
+ {
+  "code": "SD",
+  "name": "Stone deposits (C)"
+ }
+]

@@ -1,0 +1,18 @@
+[
+ {
+  "code": "FAS",
+  "name": "Fast (with waves or high velocity) (A)"
+ },
+ {
+  "code": "NOR",
+  "name": "Slow (B)"
+ },
+ {
+  "code": "STA",
+  "name": "Stagnant/intermittent (C)"
+ },
+ {
+  "code": "DRY",
+  "name": "Dry (D)"
+ }
+]

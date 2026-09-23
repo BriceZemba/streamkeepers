@@ -1,0 +1,86 @@
+{
+ "cities": {
+  "url": "https://api.enora-oah.eu/api/cities/all",
+  "fetchedAt": "2026-09-23T20:00:10.550Z",
+  "sha256": "14fac66444658ee557e385b105cb4aff6a9550cf261a655770aa24f7889d0920",
+  "records": 5
+ },
+ "sites": {
+  "url": "https://api.enora-oah.eu/api/sites/all",
+  "fetchedAt": "2026-09-23T20:00:10.787Z",
+  "sha256": "c0272962378fbe64befae344acb410386fbb71b94777d03c9ad4fe795cf0c632",
+  "records": 106
+ },
+ "userSites": {
+  "url": "https://api.enora-oah.eu/api/sites/user-generated",
+  "fetchedAt": "2026-09-23T20:00:10.896Z",
+  "sha256": "5fedd0c6a11b0c6c6ac8b37d6839b54eacd8013567e7195172b91fe62ea99165",
+  "records": 69
+ },
+ "healthRisks": {
+  "url": "https://api.enora-oah.eu/api/resilience-map/health-risks",
+  "fetchedAt": "2026-09-23T20:00:11.022Z",
+  "sha256": "3aee00272cc6ff02a3a5bcdf6975372875ef4056d37f2ebb0253bc12edbf5aa8",
+  "records": 96
+ },
+ "urbanParameters": {
+  "url": "https://api.enora-oah.eu/api/resilience-map/urban-parameters",
+  "fetchedAt": "2026-09-23T20:00:11.183Z",
+  "sha256": "b83169cee0d6a4be9ff88136ec4de9cedb45da7d07eb46673019c47fee89cf54",
+  "records": 104
+ },
+ "channelForms": {
+  "url": "https://api.enora-oah.eu/api/citizens/channel_forms",
+  "fetchedAt": "2026-09-23T20:00:11.269Z",
+  "sha256": "7c87af1f7bcd29483aa97abfd44cb69509db350974e653ff2a0a49295a39645c",
+  "records": 3
+ },
+ "channelTypes": {
+  "url": "https://api.enora-oah.eu/api/citizens/channel_types",
+  "fetchedAt": "2026-09-23T20:00:11.359Z",
+  "sha256": "c3562fb11b4d152313eb72b3d5bbf44efc29a084f82a9f7e92ce93c16ed06c07",
+  "records": 2
+ },
+ "bankTypes": {
+  "url": "https://api.enora-oah.eu/api/citizens/bank_types",
+  "fetchedAt": "2026-09-23T20:00:11.448Z",
+  "sha256": "de2ee57b8740678d42e650d2a26aeb89f10885c41735d8392c6423034d1e45e2",
+  "records": 3
+ },
+ "habitats": {
+  "url": "https://api.enora-oah.eu/api/citizens/habitats",
+  "fetchedAt": "2026-09-23T20:00:11.535Z",
+  "sha256": "f9ee5938477c8f77d33844131a42f5d8ff938a238d7da635332ba4088bc91e13",
+  "records": 5
+ },
+ "fallenBiomass": {
+  "url": "https://api.enora-oah.eu/api/citizens/fallen_biomass",
+  "fetchedAt": "2026-09-23T20:00:11.622Z",
+  "sha256": "17c222a6db8366df5c00c10b3923158a757f5d9bbf1162b55edd389b68dbc053",
+  "records": 3
+ },
+ "waterFlows": {
+  "url": "https://api.enora-oah.eu/api/citizens/water_flows",
+  "fetchedAt": "2026-09-23T20:00:11.714Z",
+  "sha256": "166f42858b9effe2d5bbad2877a509e5cc86a673ffdd35ea4950e600c89f9917",
+  "records": 4
+ },
+ "waterColors": {
+  "url": "https://api.enora-oah.eu/api/citizens/water_colors",
+  "fetchedAt": "2026-09-23T20:00:11.800Z",
+  "sha256": "8f7ad1723587826e359be5b6e004a330a69512e07d453c10b9569df5b8e75067",
+  "records": 4
+ },
+ "vegetationTypes": {
+  "url": "https://api.enora-oah.eu/api/citizens/vegetation_types",
+  "fetchedAt": "2026-09-23T20:00:11.883Z",
+  "sha256": "b19908214241da64583f6c3bc68f53b6edb3160b25fe8a70ae079a0549659565",
+  "records": 3
+ },
+ "streamAssessments": {
+  "url": "https://api.enora-oah.eu/api/citizens/stream_assessments",
+  "fetchedAt": "2026-09-23T20:00:11.974Z",
+  "sha256": "f662961c1c2957259fe966081dd9064d4f12a32664443dc1ab4a486db5f9fdc3",
+  "records": 3
+ }
+}

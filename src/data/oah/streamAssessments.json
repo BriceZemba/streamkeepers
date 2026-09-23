@@ -1,0 +1,17 @@
+[
+ {
+  "code": "GOOD",
+  "name": "Good quality",
+  "description": "The ecosystem components are there: riparian vegetation, natural channel, good water quality, biodiversity"
+ },
+ {
+  "code": "MODERATE",
+  "name": "Moderate quality",
+  "description": "Some alterations, still biodiverse, with vegetation in the margins, water looks good…"
+ },
+ {
+  "code": "POOR",
+  "name": "Poor quality",
+  "description": "Highly modified / artificialized, loss of riparian vegetation, loss of habitats, polluted"
+ }
+]

@@ -1,0 +1,18 @@
+[
+ {
+  "code": "CL",
+  "name": "Clear/transparent (A)"
+ },
+ {
+  "code": "MU",
+  "name": "Muddy/turbid (B)"
+ },
+ {
+  "code": "FO",
+  "name": "Has foam (C)"
+ },
+ {
+  "code": "CO",
+  "name": "Has colors/altered color (D)"
+ }
+]
