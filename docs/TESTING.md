@@ -1,0 +1,56 @@
+# Testing StreamKeepers
+
+## 1. On your computer (fastest)
+
+```bash
+npm install
+npm run dev
+```
+
+Open http://localhost:5173 and switch the browser to a phone size (F12, then the device toolbar).
+Add `?practice=1` to try checks from home: http://localhost:5173/?practice=1
+
+Things to try:
+- Coimbra list: **Mina Hospital** (117 pts, not checked this season) vs **Exploratório** (15 pts, checked 9× this season, simulated activity).
+- Open a mission card: every point has a reason.
+- Do a check in under 90 s: it is held for review, not deleted.
+- Do a careful check (≥ 90 s) in practice mode: points are credited.
+- Rate a stream **Good** but report sewage: the consistency rule asks a reviewer to look.
+- **Me** tab: history, points, settings (practice mode, simulated activity), reset.
+
+Automated checks:
+
+```bash
+npm test         # domain rules: mission value, quality gate
+npm run build    # type check + production build
+```
+
+## 2. On your phone (same Wi-Fi)
+
+```bash
+npm run dev:phone
+```
+
+Open the `Network:` address it prints (e.g. `http://192.168.1.20:5173/?practice=1`) on your phone.
+Browsers only share GPS with HTTPS pages, so on this local address use practice mode.
+For real GPS, use the hosted HTTPS version (from Fri Sep 25).
+
+## 3. User test (Sun Sep 27, 5–8 people, ~15 min each)
+
+Use the hosted link with `?practice=1`. Remote over video call with screen sharing is fine. Don't help unless the person is stuck for more than 60 s, and note where they got stuck.
+
+**Before (1 min):** age range, ever used a citizen-science or nature app (yes/no), phone type.
+
+**Tasks** (record time and whether they complete it without help):
+1. "Find the stream in Coimbra where a check is worth the most. Why is it worth that much?" (comprehension)
+2. "Why is Exploratório worth so few points?" (comprehension of coverage)
+3. "Do a full stream check at Mina Hospital, answering as if you were standing there." (time to complete, errors, questions asked)
+4. "Look at the result. What happened to your points and why?"
+
+**After:**
+- SUS questionnaire (10 standard statements, 1–5 scale) → score 0–100.
+- "Would you go back next season to check the same stream? Why?" (1–5 + one sentence)
+- "Did anything make you want to exaggerate or rush?" (open)
+- "One thing to change?" (open)
+
+**Record** results in `eval/user_test.md`: one row per person (no names, P1…P8), task times, completions, SUS, quotes. Report the median and range, and state n honestly. Failures and complaints go in too.
