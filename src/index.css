@@ -333,6 +333,7 @@ main { flex: 1; display: flex; flex-direction: column; }
 
 .adopted-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--moss); background: var(--moss-soft); padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
 .detail-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 18px; }
+.toast { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%); z-index: 1300; margin: 0; padding: 10px 16px; border-radius: 999px; background: var(--ink); color: var(--paper); font-weight: 650; font-size: 0.88rem; box-shadow: var(--shadow); animation: rise 0.2s ease both; }
 .btn-soft { border: 1.5px solid var(--line); background: var(--card); color: var(--ink); min-height: 46px; font-size: 0.9rem; }
 .btn-soft[aria-pressed="true"] { border-color: var(--moss); background: var(--moss-soft); color: var(--moss); }
 

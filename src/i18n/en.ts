@@ -139,6 +139,18 @@ export const en: Record<string, string> = {
   "journal.delete": "Delete checks on this phone",
   "journal.deleteConfirm": "Delete all checks stored on this phone? Copies already on the FHIR server stay there.",
 
+  "detail.remind": "Remind me",
+  "detail.invite": "Invite a friend",
+  "detail.copied": "Link copied",
+  "detail.copyThis": "Copy this link:",
+  "remind.title": "StreamKeepers: check {site}",
+  "remind.descOnce": "A stream check at {site} is worth {n} points right now. About 3 minutes.",
+  "remind.descSeason": "Seasonal check of your adopted stream {site}: it continues its time series and keeps your streak.",
+  "share.text": "Help check {site} for OneAquaHealth: a 3-minute stream check, worth {n} points right now.",
+  "journal.remindSeason": "Add seasonal reminder",
+  "journal.remindHint": "Adds an event to your phone's calendar each season, with a link back to this stream. No account or notification permission needed.",
+  "journal.community": "Find or start this stream's group on the OneAquaHealth Community",
+
   "season.winter": "Winter",
   "season.spring": "Spring",
   "season.summer": "Summer",

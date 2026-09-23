@@ -20,6 +20,8 @@ Things to try:
 - Header: **language toggle** (EN → PT → FR, also `?lang=pt`) and **light/dark toggle** (starts from the phone's setting).
 - **Search** a site (accent-insensitive: "estacao" finds "Estação Cbr-B") and sort by **Nearest** (needs location permission).
 - Mission page: **Directions** (opens the phone's map app) and **Adopt this stream** (+15 pts for its seasonal check, season streak in the Journal).
+- Mission page: **Remind me** (adds a calendar event; for your adopted stream it repeats every season) and **Invite a friend** (share sheet, or copy the link). Links like `?site=C5` open that mission directly.
+- Journal: **Add seasonal reminder** and a link to the stream's group on the OneAquaHealth Community.
 - Close a check halfway, reopen the app: a **Resume** banner offers to continue where you stopped.
 - Go offline (DevTools → Network → Offline): a banner appears; checks stay on the phone and are sent when the connection returns.
 

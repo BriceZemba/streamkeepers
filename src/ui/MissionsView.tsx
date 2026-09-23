@@ -3,6 +3,8 @@ import { CITIES } from "../domain/siteFacts";
 import { distanceM, getPosition } from "../domain/geo";
 import type { Draft } from "../domain/store";
 import { useI18n } from "../i18n";
+import { missionLink, reminderIcs } from "../domain/reminder";
+import { downloadIcs, shareLink } from "./actions";
 import { MissionMap } from "./MissionMap";
 import { band, fold, type Mission } from "./useMissions";
 
@@ -200,8 +202,29 @@ function headline(m: Mission, t: ReturnType<typeof useI18n>["t"]): string {
 }
 
 function MissionDetail({ mission, adopted, onAdopt, onStart, onClose }: { mission: Mission; adopted: boolean; onAdopt: (code: string | null) => void; onStart: () => void; onClose: () => void }) {
-  const { t, tm } = useI18n();
+  const { t, tm, lang } = useI18n();
   const { site, value } = mission;
+  const [toast, setToast] = useState<string | null>(null);
+  const [manualLink, setManualLink] = useState(false);
+  const link = missionLink(location.href, site.code, lang);
+  const remind = () =>
+    downloadIcs(
+      `streamkeepers-${site.code}.ics`,
+      reminderIcs({
+        siteCode: site.code, siteName: site.name, lat: site.lat, lon: site.lon, url: link, now: new Date(), seasonal: adopted,
+        title: t("remind.title", { site: site.name }),
+        description: adopted ? t("remind.descSeason", { site: site.name }) : t("remind.descOnce", { site: site.name, n: value.points }),
+      }),
+    );
+  const invite = async () => {
+    const r = await shareLink({ title: "StreamKeepers", text: t("share.text", { site: site.name, n: value.points }), url: link });
+    if (r === "copied") {
+      setToast(t("detail.copied"));
+      setTimeout(() => setToast(null), 2500);
+    } else if (r === "failed") {
+      setManualLink(true); // no share sheet and no clipboard access: let the user copy it
+    }
+  };
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
     ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -227,7 +250,22 @@ function MissionDetail({ mission, adopted, onAdopt, onStart, onClose }: { missio
         <button className="btn btn-soft" aria-pressed={adopted} onClick={() => onAdopt(adopted ? null : site.code)} title={t("detail.adoptHint")}>
           {adopted ? `♥ ${t("detail.adopted")}` : `♡ ${t("detail.adopt")}`}
         </button>
+        <button className="btn btn-soft" onClick={remind}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4M12 13v4M10 15h4" /></svg>
+          {t("detail.remind")}
+        </button>
+        <button className="btn btn-soft" onClick={invite}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5M19 8v6M16 11h6" /></svg>
+          {t("detail.invite")}
+        </button>
       </div>
+      {toast && <p className="toast" role="status">{toast}</p>}
+      {manualLink && (
+        <label className="field" style={{ marginTop: -6 }}>
+          {t("detail.copyThis")}
+          <input readOnly value={link} onFocus={(e) => e.currentTarget.select()} autoFocus />
+        </label>
+      )}
 
       <h3 style={{ marginBottom: 10 }}>{t("detail.why", { n: value.points })}</h3>
       <ul className="ledger">

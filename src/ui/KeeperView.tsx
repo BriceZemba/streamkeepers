@@ -4,6 +4,8 @@ import type { Keeper, StoredCheck, Streak } from "../domain/store";
 import { FHIR_SERVERS, type ServerKey } from "../fhir/client";
 import { useI18n } from "../i18n";
 import { Contours } from "./glyphs";
+import { missionLink, reminderIcs } from "../domain/reminder";
+import { downloadIcs } from "./actions";
 
 export interface Settings {
   practice: boolean;
@@ -11,10 +13,11 @@ export interface Settings {
   server: ServerKey;
 }
 
-export function KeeperView({ keeper, checks, siteName, streak, settings, onSettings, onName, onReset, onRetry, onOpenSite }: {
+export function KeeperView({ keeper, checks, siteName, siteGeo, streak, settings, onSettings, onName, onReset, onRetry, onOpenSite }: {
   keeper: Keeper;
   checks: StoredCheck[];
   siteName: (code: string) => string;
+  siteGeo: (code: string) => { lat: number; lon: number } | undefined;
   streak: Streak;
   settings: Settings;
   onSettings: (s: Settings) => void;
@@ -60,7 +63,30 @@ export function KeeperView({ keeper, checks, siteName, streak, settings, onSetti
             <p className="small muted" style={{ margin: "0 0 10px" }}>
               {streak.dueThisSeason ? t("journal.due", { n: DEFAULT_WEIGHTS.adopted }) : t("journal.doneSeason")}
             </p>
-            <button className="btn btn-soft btn-sm" onClick={() => onOpenSite(keeper.adopted!)}>{t("journal.open")} →</button>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              <button className="btn btn-soft btn-sm" onClick={() => onOpenSite(keeper.adopted!)}>{t("journal.open")} →</button>
+              <button
+                className="btn btn-soft btn-sm"
+                title={t("journal.remindHint")}
+                onClick={() => {
+                  const code = keeper.adopted!;
+                  const geo = siteGeo(code);
+                  if (!geo) return;
+                  downloadIcs(`streamkeepers-${code}-seasonal.ics`, reminderIcs({
+                    siteCode: code, siteName: siteName(code), lat: geo.lat, lon: geo.lon, seasonal: true, now: new Date(),
+                    url: missionLink(location.href, code, lang),
+                    title: t("remind.title", { site: siteName(code) }),
+                    description: t("remind.descSeason", { site: siteName(code) }),
+                  }));
+                }}
+              >
+                ⏰ {t("journal.remindSeason")}
+              </button>
+            </div>
+            <p className="tiny muted" style={{ margin: "8px 0 0" }}>{t("journal.remindHint")}</p>
+            <p className="small" style={{ margin: "10px 0 0" }}>
+              <a href="https://www.oneaquahealth.eu/groups/" target="_blank" rel="noreferrer">{t("journal.community")} ↗</a>
+            </p>
           </>
         ) : (
           <p className="small muted" style={{ margin: "4px 0 0" }}>{t("journal.adoptNone")}</p>

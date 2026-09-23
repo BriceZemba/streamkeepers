@@ -40,7 +40,11 @@ export default function App() {
   const { t, lang, nextLang } = useI18n();
   const [theme, toggleTheme] = useTheme();
   const online = useOnline();
-  const [screen, setScreen] = useState<Screen>({ name: "missions" });
+  // A shared or reminder link (?site=C5) opens that stream's mission directly.
+  const [screen, setScreen] = useState<Screen>(() => {
+    const site = new URLSearchParams(location.search).get("site");
+    return site && SITES.has(site) ? { name: "missions", focus: site } : { name: "missions" };
+  });
   const [checks, setChecks] = useState<StoredCheck[]>(loadChecks);
   const [keeper, setKeeper] = useState(loadKeeper);
   const [settings, setSettingsState] = useState<Settings>(initialSettings);
@@ -181,6 +185,7 @@ export default function App() {
             keeper={keeper}
             checks={checks}
             siteName={siteName}
+            siteGeo={(code) => SITES.get(code)}
             streak={streak}
             settings={settings}
             onSettings={setSettings}
