@@ -34,7 +34,7 @@ describe("missionValue", () => {
   it("explains every point it awards", () => {
     const v = missionValue(site(), { checksThisSeason: 0 }, NOW, 0.5);
     expect(v.parts.every((p) => p.reason.length > 0)).toBe(true);
-    expect(Math.abs(v.parts.reduce((s, p) => s + p.points, 0) - v.points)).toBeLessThanOrEqual(v.parts.length);
+    expect(v.parts.reduce((s, p) => s + p.points, 0)).toBe(v.points);
     expect(v.parts.find((p) => p.key === "labStaleness")?.reason).toContain("Jun 2023");
   });
 

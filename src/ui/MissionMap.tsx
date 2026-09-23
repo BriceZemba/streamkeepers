@@ -1,42 +1,65 @@
-import { useEffect } from "react";
-import { CircleMarker, MapContainer, TileLayer, Tooltip, useMap } from "react-leaflet";
-import { latLngBounds } from "leaflet";
+import { useEffect, useMemo } from "react";
+import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
+import { divIcon, latLngBounds } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { band, type Mission } from "./useMissions";
 
-const COLORS = { high: "#0b6e4f", mid: "#2f8fbf", low: "#9bb7c9" };
-
 function FitTo({ missions }: { missions: Mission[] }) {
   const map = useMap();
+  const key = missions.map((m) => m.site.code).join();
   useEffect(() => {
     if (missions.length === 0) return;
-    const b = latLngBounds(missions.map((m) => [m.site.lat, m.site.lon]));
-    map.fitBounds(b, { padding: [24, 24], maxZoom: 14 });
-  }, [missions, map]);
+    // Wait for the container's final size, otherwise the fit uses a stale size.
+    const t = setTimeout(() => {
+      map.invalidateSize();
+      map.fitBounds(latLngBounds(missions.map((m) => [m.site.lat, m.site.lon])), { padding: [28, 28], maxZoom: 14 });
+    }, 60);
+    return () => clearTimeout(t);
+    // Fit only when the set of sites changes, not on every points update.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key, map]);
   return null;
 }
 
-export function MissionMap({ missions, selected, onSelect }: { missions: Mission[]; selected: string | null; onSelect: (code: string) => void }) {
+function FlyToSelected({ mission }: { mission: Mission | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (mission) map.flyTo([mission.site.lat, mission.site.lon], Math.max(map.getZoom(), 14), { duration: 0.6 });
+  }, [mission, map]);
+  return null;
+}
+
+const icon = (m: Mission, selected: boolean) =>
+  divIcon({
+    className: "pin-host",
+    html: `<div class="pin pin-${band(m.value.points)}${selected ? " is-selected" : ""}"><span>${m.value.points}</span></div>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+  });
+
+export function MissionMap({ missions, selected, onSelect }: { missions: Mission[]; selected: Mission | null; onSelect: (code: string) => void }) {
+  // Draw higher-value pins on top.
+  const ordered = useMemo(() => [...missions].sort((a, b) => a.value.points - b.value.points), [missions]);
   return (
-    <div className="map" role="region" aria-label="Map of stream missions">
-      <MapContainer center={[40.2, -8.42]} zoom={12} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
-        <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+    <div className="map" role="region" aria-label="Map of stream missions; the list below has the same missions">
+      <MapContainer center={[40.2, -8.42]} zoom={12} scrollWheelZoom={false} zoomControl style={{ height: "100%", width: "100%" }}>
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+          maxZoom={19}
+        />
         <FitTo missions={missions} />
-        {missions.map((m) => {
-          const b = band(m.value.points);
-          const isSel = m.site.code === selected;
-          return (
-            <CircleMarker
-              key={m.site.code}
-              center={[m.site.lat, m.site.lon]}
-              radius={isSel ? 14 : 6 + m.value.points / 20}
-              pathOptions={{ color: isSel ? "#10222e" : "#ffffff", weight: isSel ? 3 : 1.5, fillColor: COLORS[b], fillOpacity: 0.9 }}
-              eventHandlers={{ click: () => onSelect(m.site.code) }}
-            >
-              <Tooltip direction="top">{`${m.site.name}: ${m.value.points} pts`}</Tooltip>
-            </CircleMarker>
-          );
-        })}
+        <FlyToSelected mission={selected} />
+        {ordered.map((m) => (
+          <Marker
+            key={m.site.code}
+            position={[m.site.lat, m.site.lon]}
+            icon={icon(m, m.site.code === selected?.site.code)}
+            zIndexOffset={m.site.code === selected?.site.code ? 1000 : m.value.points}
+            title={`${m.site.name}: ${m.value.points} points`}
+            eventHandlers={{ click: () => onSelect(m.site.code) }}
+          />
+        ))}
       </MapContainer>
     </div>
   );

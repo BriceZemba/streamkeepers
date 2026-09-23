@@ -1,0 +1,73 @@
+{
+ "server": "https://hapi.fhir.org/baseR4",
+ "gate": "ACCEPTED",
+ "result": {
+  "server": "https://hapi.fhir.org/baseR4",
+  "ok": true,
+  "refs": [
+   "Questionnaire/98547",
+   "Location/98548",
+   "Practitioner/98549",
+   "QuestionnaireResponse/98563",
+   "Observation/98557",
+   "Observation/98558",
+   "Observation/98559",
+   "Observation/98560",
+   "Observation/98561",
+   "Observation/98562"
+  ],
+  "verified": [
+   {
+    "ref": "Questionnaire/98547",
+    "ok": true,
+    "note": "read back and matched"
+   },
+   {
+    "ref": "Location/98548",
+    "ok": true,
+    "note": "read back and matched"
+   },
+   {
+    "ref": "Practitioner/98549",
+    "ok": true,
+    "note": "read back and matched"
+   },
+   {
+    "ref": "QuestionnaireResponse/98563",
+    "ok": true,
+    "note": "read back and matched"
+   },
+   {
+    "ref": "Observation/98557",
+    "ok": true,
+    "note": "read back and matched"
+   },
+   {
+    "ref": "Observation/98558",
+    "ok": true,
+    "note": "read back and matched"
+   },
+   {
+    "ref": "Observation/98559",
+    "ok": true,
+    "note": "read back and matched"
+   },
+   {
+    "ref": "Observation/98560",
+    "ok": true,
+    "note": "read back and matched"
+   },
+   {
+    "ref": "Observation/98561",
+    "ok": true,
+    "note": "read back and matched"
+   },
+   {
+    "ref": "Observation/98562",
+    "ok": true,
+    "note": "read back and matched"
+   }
+  ],
+  "at": "2026-09-23T20:23:09.430Z"
+ }
+}

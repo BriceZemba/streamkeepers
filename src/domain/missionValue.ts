@@ -108,7 +108,6 @@ export function missionValue(
 
   // Diminishing returns: each accepted check this season halves, then thirds... the need.
   const coverage = 1 / (1 + activity.checksThisSeason);
-  const needTotal = need.reduce((s, p) => s + p.points, 0);
   const parts: ValuePart[] = [{ key: "base", points: w.base, reason: "Every careful check counts" }];
   for (const p of need) parts.push({ ...p, points: p.points * coverage });
   if (activity.checksThisSeason > 0) {
@@ -118,8 +117,9 @@ export function missionValue(
       reason: `Already checked ${activity.checksThisSeason}× this season, so this visit adds less (need × ${coverage.toFixed(2)})`,
     });
   }
-  const points = Math.round(w.base + needTotal * coverage);
-  return { points, parts: parts.map((p) => ({ ...p, points: Math.round(p.points) })) };
+  // The total is the exact sum of the rounded parts shown, so the ledger always adds up.
+  const rounded = parts.map((p) => ({ ...p, points: Math.round(p.points) }));
+  return { points: rounded.reduce((s, p) => s + p.points, 0), parts: rounded };
 }
 
 /** Meteorological season key, e.g. "2026-autumn" (Dec counts toward next year's winter). */

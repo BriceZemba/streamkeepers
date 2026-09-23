@@ -3,6 +3,7 @@
 // OneAquaHealth FHIR server; this module stays as the offline queue.
 import { seasonKey } from "./missionValue";
 import type { CheckSubmission, GateResult } from "./qualityGate";
+import type { SyncResult } from "../fhir/client";
 
 export interface StoredCheck extends CheckSubmission {
   id: string;
@@ -11,6 +12,8 @@ export interface StoredCheck extends CheckSubmission {
   missionPoints: number;
   /** Points actually credited: missionPoints if accepted, 0 while under review or for a same-day repeat. */
   creditedPoints: number;
+  /** Last attempt to store this check on a FHIR server (absent = not tried yet). */
+  sync?: SyncResult;
 }
 
 /**
@@ -52,6 +55,12 @@ export function loadChecks(): StoredCheck[] {
 
 export function saveCheck(c: StoredCheck): StoredCheck[] {
   const all = [...loadChecks(), c];
+  write(KEY_CHECKS, all);
+  return all;
+}
+
+export function updateCheck(id: string, patch: Partial<StoredCheck>): StoredCheck[] {
+  const all = loadChecks().map((c) => (c.id === id ? { ...c, ...patch } : c));
   write(KEY_CHECKS, all);
   return all;
 }
