@@ -11,7 +11,7 @@ Open http://localhost:5173 and switch the browser to a phone size (F12, then the
 Add `?practice=1` to try checks from home: http://localhost:5173/?practice=1
 
 Things to try:
-- Coimbra list: **Mina Hospital** (117 pts, not checked this season) vs **Exploratório** (15 pts, checked 9× this season, simulated activity).
+- Coimbra list: **Mina Hospital** (116 pts, not checked this season) vs **Exploratório** (15 pts, checked 9× this season, simulated activity).
 - Open a mission card: every point has a reason.
 - Do a check in under 90 s: it is held for review, not deleted.
 - Do a careful check (≥ 90 s) in practice mode: points are credited.
