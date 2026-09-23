@@ -6,6 +6,8 @@ OneAquaHealth IEEE Global Hackathon 2026 · **Track 5: Community & Gamification*
 
 > Work in progress (hackathon build, Sep 23–29, 2026). This README will be completed before submission.
 
+**Live app:** https://streamkeepers.vercel.app (add `?practice=1` to try a check from anywhere, `?lang=pt` or `?lang=fr` for Portuguese or French).
+
 Most gamified citizen-science apps pay per report, so volunteers cluster at the same popular spot while streams that researchers need stay unvisited. StreamKeepers prices every stream-check mission from OneAquaHealth's own data gaps (time since the last lab campaign, whether anyone has checked the site this season, lab health risk, people living near the water) and shows the reason behind every point. Points never depend on the result a volunteer reports.
 
 ## Data
