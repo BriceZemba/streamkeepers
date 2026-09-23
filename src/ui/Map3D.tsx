@@ -80,6 +80,8 @@ export default function Map3D({ missions, selected, onSelect, label, me }: { mis
       attributionControl: { compact: true },
     });
     m.addControl(new NavigationControl({ visualizePitch: true }), "top-left");
+    // Keep the credits collapsed to the (i) button on phones; they stay one tap away.
+    m.once("load", () => m.getContainer().querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show"));
     map.current = m;
     if (import.meta.env.DEV) (window as unknown as { __skMap3d?: MlMap }).__skMap3d = m; // debugging aid in dev only
     const ro = new ResizeObserver(() => m.resize());
