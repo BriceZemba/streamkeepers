@@ -27,7 +27,8 @@ The obvious fix is points per report, badges and a leaderboard. That rewards vol
 1. **Prices every stream-check mission from OneAquaHealth's own data gaps.** Time since the last lab campaign, whether anyone has checked the site this season, the lab health-risk score, and how many people live near the water. Each point comes with its reason ("Lab health-risk score 0.78: +23"). A site already checked this season is worth less with every check.
 2. **Never pays for the result.** A polluted stream earns exactly the same as a clean one, so there is nothing to gain by exaggerating.
 3. **Pays only after a quality check.** A check goes to a reviewer instead of scoring if it was rushed (under 90 s), made far from the site, or contradicts itself: rated "Good" while reporting sewage, or "Poor" while everything reported is natural and clear. Nothing is deleted.
-4. **Stores every check in the OneAquaHealth FHIR format** and confirms it by reading it back, not by trusting the server's "OK".
+4. **Gives coordinators a view of the season.** They accept or reject held checks with a reason (acceptance credits the points and creates the OneAquaHealth indicator data), see coverage by city, and get the unchecked high-risk sites to cover with a lab visit or an organised outing.
+5. **Stores every check and every review decision in the OneAquaHealth FHIR format** and confirms them by reading them back, not by trusting the server's "OK".
 
 ## Evidence
 
@@ -40,9 +41,10 @@ Every number below comes from a script in this repository; nothing is hand-typed
 | What points do **not** do | They don't move effort towards distant high-risk sites: the share of checks made at high-risk sites stays about 24%, even with a 3× larger risk weight. Volunteers check streams near home. | same file, "what-if" table |
 | The quality check never penalises a genuine pollution report | A careful, consistent polluted-stream report is accepted like a clean one; rushed, far-away or contradictory ones go to review. | [`src/domain/qualityGate.test.ts`](src/domain/qualityGate.test.ts) |
 | Checks are stored as OneAquaHealth FHIR and verified | An accepted check becomes 11 FHIR resources (QuestionnaireResponse, 7 `observation-indicators-oah` Observations, Location, Questionnaire, Practitioner); each is read back with a separate GET and compared. Reused resources are not duplicated. | `npm run fhir:smoke`, [`eval/fhir_smoke_last.json`](eval/fhir_smoke_last.json), [`src/fhir/mapping.test.ts`](src/fhir/mapping.test.ts) |
+| Reviewer decisions are recorded in FHIR | Accepting a held check writes the `observation-indicators-oah` Observations, derived from the stored QuestionnaireResponse, plus a Provenance naming the reviewer as verifier; rejecting writes a Provenance with the reason. Checked on the live server by independent reads. | [`src/fhir/review.test.ts`](src/fhir/review.test.ts) |
 | Every screen works in English, Portuguese and French | A test fails if any question, answer, reason or message is missing a translation or a placeholder. | [`src/i18n/coverage.test.ts`](src/i18n/coverage.test.ts) |
 
-`npm test` runs 45 tests.
+`npm test` runs 50 tests.
 
 ## How it differs from what OneAquaHealth already has
 
@@ -59,13 +61,14 @@ Things to look for:
 - **Mission page:** every point explained. Directions, Street View, a calendar reminder, invite a friend, adopt the stream.
 - **A check in under 90 seconds** is held for review with points on hold. A careful one scores.
 - **Header:** language toggle (EN → PT → FR) and light/dark theme. **Map:** Plan, Satellite and 3D relief; Near me; enlarged map.
+- **Coordinator view:** [streamkeepers.vercel.app/?coordinator](https://streamkeepers.vercel.app/?coordinator&practice=1) (or Journal → Coordinator view). Do a quick check first, then accept or reject it there.
 
 **Locally:**
 
 ```bash
 npm install
 npm run dev            # http://localhost:5173/?practice=1
-npm test               # 45 tests
+npm test               # 50 tests
 npm run simulate       # rewrites eval/sim_results.md (about a minute)
 npm run fhir:smoke     # writes a practice check to a FHIR server and reads it back
 npm run snapshot       # refreshes the OneAquaHealth data snapshot
@@ -83,7 +86,9 @@ flowchart LR
   MAP --> CHECK["Guided stream check<br/>official codes, plain words"]
   CHECK --> GATE{"Quality gate<br/>complete · careful · at site<br/>consistent · new visit"}
   GATE -->|accepted| PTS["Points credited"]
-  GATE -->|held| REV["Reviewer, nothing deleted"]
+  GATE -->|held| REV["Coordinator review<br/>accept / reject + reason"]
+  REV -->|accept| PTS
+  REV --> PROV["FHIR Provenance<br/>+ OAH Observations"]
   CHECK --> FHIR["FHIR R4 transaction<br/>OAH IG profiles"]
   FHIR --> READ["Independent read-back"]
   VALUE --> SIM["Season simulation<br/>npm run simulate"]
@@ -102,6 +107,7 @@ flowchart LR
 | Location | `location-oah`, identifier = OAH site code | created once (conditional create) |
 | Practitioner | pseudonymous volunteer ID, no name | created once |
 | Questionnaire | the StreamKeepers form, versioned | created once |
+| Provenance | reviewer as `verifier`, reason, targets the QuestionnaireResponse and new Observations | every review decision |
 
 "Not sure" answers never become indicator data. Practice checks carry the standard `HTEST` security label.
 
@@ -113,7 +119,8 @@ flowchart LR
 - **Mission weights are policy choices,** visible in every mission's reasons, not validated science.
 - **The OneAquaHealth FHIR sandbox was unreachable during the build** (from 23 September 2026). Practice checks were therefore verified on the public HAPI R4 test server; the app says so on screen. Real checks are never sent to a public test server; they wait on the phone.
 - **A gap in the IG:** `observation-indicators-oah` fixes `status = final`, so there is no place for unreviewed citizen data. StreamKeepers keeps held checks as QuestionnaireResponses until a reviewer confirms them.
-- **Not built:** accounts, a separate social network (the app links to the OneAquaHealth Community groups instead), push notifications (calendar reminders instead), and the reviewer's side of the quality check.
+- **The coordinator view reads checks stored on the device** in this prototype (plus the labelled simulated activity). In a deployment it would read the same QuestionnaireResponses from the OneAquaHealth FHIR server; reviewers would need an account there.
+- **Not built:** volunteer accounts, a separate social network (the app links to the OneAquaHealth Community groups instead), push notifications (calendar reminders instead).
 - **User testing:** [FILL: n testers, SUS score, median time per check, from eval/user_test.md].
 
 ## Credits and licence

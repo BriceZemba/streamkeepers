@@ -13,7 +13,8 @@
     "dev:phone": "vite --host",
     "fhir:smoke": "tsx scripts/fhir-smoke.ts",
     "simulate": "tsx scripts/simulate.ts",
-    "screenshots": "tsx scripts/screenshots.ts"
+    "screenshots": "tsx scripts/screenshots.ts",
+    "fhir:examples": "tsx scripts/fhir-examples.ts"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",
