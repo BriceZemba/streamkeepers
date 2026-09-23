@@ -61,11 +61,14 @@ function pinElement(m: Mission, selected: boolean, onSelect: (code: string) => v
   return host;
 }
 
-export default function Map3D({ missions, selected, onSelect, label, me }: { missions: Mission[]; selected: Mission | null; onSelect: (code: string) => void; label: string; me: Me | null }) {
+export default function Map3D({ missions, selected, onSelect, label, me, draft, onMapTap }: { missions: Mission[]; selected: Mission | null; onSelect: (code: string) => void; label: string; me: Me | null; draft?: { lat: number; lon: number } | null; onMapTap?: (p: { lat: number; lon: number }) => void }) {
   const el = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const markers = useRef<Marker[]>([]);
   const meMarker = useRef<Marker | null>(null);
+  const draftMarker = useRef<Marker | null>(null);
+  const tapRef = useRef(onMapTap);
+  tapRef.current = onMapTap;
 
   useEffect(() => {
     if (!el.current) return;
@@ -80,6 +83,7 @@ export default function Map3D({ missions, selected, onSelect, label, me }: { mis
       attributionControl: { compact: true },
     });
     m.addControl(new NavigationControl({ visualizePitch: true }), "top-left");
+    m.on("click", (e) => tapRef.current?.({ lat: e.lngLat.lat, lon: e.lngLat.lng }));
     // Keep the credits collapsed to the (i) button on phones; they stay one tap away.
     m.once("load", () => m.getContainer().querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show"));
     map.current = m;
@@ -117,6 +121,17 @@ export default function Map3D({ missions, selected, onSelect, label, me }: { mis
     dot.className = "me-dot";
     meMarker.current = new Marker({ element: dot }).setLngLat([me.lon, me.lat]).addTo(m);
   }, [me]);
+
+  // Draft pin while proposing a new stream
+  useEffect(() => {
+    const m = map.current;
+    draftMarker.current?.remove();
+    draftMarker.current = null;
+    if (!m || !draft) return;
+    const el = document.createElement("div");
+    el.className = "draft-dot";
+    draftMarker.current = new Marker({ element: el }).setLngLat([draft.lon, draft.lat]).addTo(m);
+  }, [draft]);
 
   // Frame the area when the set of sites changes; fly to a selected site.
   useEffect(() => {

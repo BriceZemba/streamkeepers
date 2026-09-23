@@ -27,8 +27,10 @@ The obvious fix is points per report, badges and a leaderboard. That rewards vol
 1. **Prices every stream-check mission from OneAquaHealth's own data gaps.** Time since the last lab campaign, whether anyone has checked the site this season, the lab health-risk score, and how many people live near the water. Each point comes with its reason ("Lab health-risk score 0.78: +23"). A site already checked this season is worth less with every check.
 2. **Never pays for the result.** A polluted stream earns exactly the same as a clean one, so there is nothing to gain by exaggerating.
 3. **Pays only after a quality check.** A check goes to a reviewer instead of scoring if it was rushed (under 90 s), made far from the site, or contradicts itself: rated "Good" while reporting sewage, or "Poor" while everything reported is natural and clear. Nothing is deleted.
-4. **Gives coordinators a view of the season.** They accept or reject held checks with a reason (acceptance credits the points and creates the OneAquaHealth indicator data), see coverage by city, and get the unchecked high-risk sites to cover with a lab visit or an organised outing.
-5. **Stores every check and every review decision in the OneAquaHealth FHIR format** and confirms them by reading them back, not by trusting the server's "OK".
+4. **Explains each stream from OneAquaHealth data.** Every mission page ends with "What we know about this site": the last lab visit (pathogens, faecal bacteria, antibiotic-resistance genes, relative to the other 96 sites), paved and green land within 500 m, and the distance to the nearest sewage station, hospital and farmland. Nothing is written by hand or generated; a site without data says so.
+5. **Lets volunteers propose streams, without a way to farm points.** A proposed stream is checked for duplicates (another site within 150 m is suggested instead) and earns only the base 10 points until a coordinator approves it; approval gives it full mission points and creates it as a FHIR Location.
+6. **Gives coordinators a view of the season.** They accept or reject held checks with a reason (acceptance credits the points and creates the OneAquaHealth indicator data), approve proposed streams, see coverage by city, and get the unchecked high-risk sites to cover with a lab visit or an organised outing.
+7. **Stores every check and every review decision in the OneAquaHealth FHIR format** and confirms them by reading them back, not by trusting the server's "OK".
 
 ## Evidence
 
@@ -45,7 +47,7 @@ Every number below comes from a script in this repository; nothing is hand-typed
 | Reviewer decisions are recorded in FHIR | Accepting a held check writes the `observation-indicators-oah` Observations, derived from the stored QuestionnaireResponse, plus a Provenance naming the reviewer as verifier; rejecting writes a Provenance with the reason. Checked on the live server by independent reads. | [`src/fhir/review.test.ts`](src/fhir/review.test.ts) |
 | Every screen works in English, Portuguese and French | A test fails if any question, answer, reason or message is missing a translation or a placeholder. | [`src/i18n/coverage.test.ts`](src/i18n/coverage.test.ts) |
 
-`npm test` runs 51 tests.
+`npm test` runs 57 tests.
 
 ## How it differs from what OneAquaHealth already has
 
@@ -59,7 +61,8 @@ Every number below comes from a script in this repository; nothing is hand-typed
 
 Things to look for:
 - **Coimbra list:** Mina Hospital is worth 116 points, never checked this season. Exploratório is worth 15 because it has been checked 9 times. Those 9 checks are simulated community activity, and the app says so.
-- **Mission page:** every point explained. Directions, Street View, a calendar reminder, invite a friend, adopt the stream.
+- **Mission page:** every point explained. Directions, Street View, a calendar reminder, invite a friend, adopt the stream. At the bottom: what the OneAquaHealth data says about the site.
+- **Propose a stream:** the **+** button on the map. Try placing it next to an existing site to see the duplicate check.
 - **A check in under 90 seconds** is held for review with points on hold. A careful one scores.
 - **Header:** language toggle (EN → PT → FR) and light/dark theme. **Map:** Plan, Satellite and 3D relief; Near me; enlarged map.
 - **Coordinator view:** [streamkeepers.vercel.app/?coordinator](https://streamkeepers.vercel.app/?coordinator&practice=1) (or Journal → Coordinator view). Do a quick check first, then accept or reject it there.
@@ -69,7 +72,7 @@ Things to look for:
 ```bash
 npm install
 npm run dev            # http://localhost:5173/?practice=1
-npm test               # 51 tests
+npm test               # 57 tests
 npm run simulate       # rewrites eval/sim_results.md (about a minute)
 npm run fhir:smoke     # writes a practice check to a FHIR server and reads it back
 npm run snapshot       # refreshes the OneAquaHealth data snapshot
@@ -105,7 +108,7 @@ flowchart LR
 |---|---|---|
 | QuestionnaireResponse | answers with the official OAH app code systems; "none of these" and "not sure" are explicit codes | every check |
 | Observation | `observation-indicators-oah`, status `final`: `morophology`, `hydrology`, `foam`, `riparianVegetation`, `LandUse`, `invasiveOrganisms` | only checks that passed the quality check |
-| Location | `location-oah`, identifier = OAH site code | created once (conditional create) |
+| Location | `location-oah`, identifier = OAH site code (streams proposed in StreamKeepers get their own identifier system) | created once (conditional create); proposed streams on approval |
 | Practitioner | pseudonymous volunteer ID, no name | created once |
 | Questionnaire | the StreamKeepers form, versioned | created once |
 | Provenance | reviewer as `verifier`, reason, targets the QuestionnaireResponse and new Observations | every review decision |

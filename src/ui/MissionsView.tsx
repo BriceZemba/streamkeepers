@@ -6,6 +6,9 @@ import { useI18n } from "../i18n";
 import { missionLink, type ReminderInput } from "../domain/reminder";
 import { shareLink } from "./actions";
 import { RemindMenu } from "./RemindMenu";
+import { AboutSite } from "./AboutSite";
+import { AddSite, type DraftPos } from "./AddSite";
+import type { SiteFacts } from "../domain/siteFacts";
 import { MapViews } from "./MapViews";
 import { band, fold, type Mission } from "./useMissions";
 
@@ -24,15 +27,18 @@ export interface MissionsProps {
   onResume: () => void;
   onDiscard: () => void;
   focusCode?: string | null;
+  allSites: SiteFacts[];
+  onPropose: (name: string, pos: DraftPos) => string;
 }
 
-export function MissionsView({ missions, simulated, adopted, draft, draftTotalSteps, onStart, onAdopt, onResume, onDiscard, focusCode }: MissionsProps) {
+export function MissionsView({ missions, simulated, adopted, draft, draftTotalSteps, onStart, onAdopt, onResume, onDiscard, focusCode, allSites, onPropose }: MissionsProps) {
   const { t, num } = useI18n();
   const [area, setArea] = useState<Area>(() => missions.find((m) => m.site.code === focusCode)?.site.cityId ?? "CO");
   const [selected, setSelected] = useState<string | null>(focusCode ?? null);
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<Sort>("needed");
   const [near, setNear] = useState<Near>({ state: "idle" });
+  const [adding, setAdding] = useState<{ pos: DraftPos | null } | null>(null);
 
   /** Get the position, show it on the map and list the nearest missions. */
   const locate = async (switchToNearest = true) => {
@@ -101,9 +107,31 @@ export function MissionsView({ missions, simulated, adopted, draft, draftTotalSt
         me={near.state === "fix" ? { lat: near.lat, lon: near.lon, accuracyM: near.accuracyM } : null}
         locating={near.state === "locating"}
         onLocate={() => void locate()}
+        adding={!!adding}
+        draft={adding?.pos ?? null}
+        onAdd={() => {
+          setSelected(null);
+          setAdding({ pos: near.state === "fix" ? { lat: near.lat, lon: near.lon } : null });
+        }}
+        onMapTap={(pos) => setAdding({ pos })}
       />
       <section className="sheet" aria-label={t("nav.missions")}>
-        {current ? (
+        {adding ? (
+          <AddSite
+            pos={adding.pos}
+            sites={allSites}
+            onPos={(pos) => setAdding({ pos })}
+            onCancel={() => setAdding(null)}
+            onOpenExisting={(code) => { setAdding(null); setSelected(code); }}
+            onSave={(name) => {
+              if (!adding.pos) return;
+              const code = onPropose(name, adding.pos);
+              setAdding(null);
+              setArea("CITIZEN");
+              setSelected(code);
+            }}
+          />
+        ) : current ? (
           <MissionDetail mission={current} adopted={adopted === current.site.code} onAdopt={onAdopt} onStart={() => onStart(current)} onClose={() => setSelected(null)} />
         ) : (
           <>
@@ -209,6 +237,7 @@ function MissionList({ missions, onSelect, muted, adopted, distance }: { mission
               <span className="mission-title">
                 {m.site.name}
                 {m.site.code === adopted && <span className="adopted-badge">♥ {t("detail.adopted")}</span>}
+                {m.site.status === "proposed" && <span className="adopted-badge proposed-badge">{t("add.proposedBadge")}</span>}
               </span>
               <span className="mission-sub" style={{ display: "block" }}>
                 {[distance?.(m), m.site.cityName, headline(m, t)].filter(Boolean).join(" · ")}
@@ -255,7 +284,7 @@ function MissionDetail({ mission, adopted, onAdopt, onStart, onClose }: { missio
   useEffect(() => {
     ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [site.code]);
-  const parts = value.parts.filter((p) => p.points > 0 || p.key === "coverage");
+  const parts = value.parts.filter((p) => p.points > 0 || p.key === "coverage" || p.key === "proposed");
   const directions = `https://www.google.com/maps/dir/?api=1&destination=${site.lat},${site.lon}&travelmode=walking`;
   // Opens Google Street View at the site (no API key needed); useful to check access before going.
   const streetView = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${site.lat},${site.lon}`;
@@ -301,7 +330,7 @@ function MissionDetail({ mission, adopted, onAdopt, onStart, onClose }: { missio
         {parts.map((p) => (
           <li key={p.key}>
             <span className="lead">{tm(p.msg, p.reason)}</span>
-            <span className={`amt${p.key === "coverage" ? " down" : ""}`}>{p.key === "coverage" ? t("detail.less") : `+${p.points}`}</span>
+            <span className={`amt${p.key === "coverage" || p.key === "proposed" ? " down" : ""}`}>{p.key === "coverage" ? t("detail.less") : p.key === "proposed" ? "…" : `+${p.points}`}</span>
           </li>
         ))}
         <li className="total"><span className="lead">{t("detail.total")}</span><span className="amt">{value.points}</span></li>
@@ -311,6 +340,8 @@ function MissionDetail({ mission, adopted, onAdopt, onStart, onClose }: { missio
 
       <button className="btn btn-primary btn-block" onClick={onStart}>{t("detail.start")} <span aria-hidden="true">→</span></button>
       <p className="tiny muted" style={{ textAlign: "center", marginTop: 10 }}>{t("detail.meta")}</p>
+
+      <AboutSite site={site} />
     </article>
   );
 }

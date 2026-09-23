@@ -11,6 +11,8 @@ import { checkBundle, type TransactionBundle } from "./fhir/mapping";
 import { reviewBundle } from "./fhir/review";
 import { applyReview, type Decision, type RejectReason } from "./domain/review";
 import { CoordinatorView } from "./ui/CoordinatorView";
+import { loadProposed, proposeSite, saveProposed, toFacts, type ProposedSite } from "./domain/proposedSites";
+import { location as locationResource } from "./fhir/mapping";
 import { LANGS, useI18n } from "./i18n";
 import { CheckFlow, type CheckDraft } from "./ui/CheckFlow";
 import { Mark } from "./ui/glyphs";
@@ -28,7 +30,8 @@ type Screen =
   | { name: "result"; checkId: string; siteName: string };
 
 const SETTINGS_KEY = "sk.settings.v2";
-const SITES = new Map(buildSiteFacts().map((s) => [s.code, s]));
+const STATIC_SITES = buildSiteFacts();
+const SITES = new Map(STATIC_SITES.map((s) => [s.code, s]));
 
 function initialSettings(): Settings {
   const fromUrl = new URLSearchParams(location.search).has("practice");
@@ -58,13 +61,18 @@ export default function App() {
   const [draft, setDraft] = useState<Draft | null>(() => loadDraft());
   const [syncing, setSyncing] = useState<Set<string>>(new Set());
   const [reviewing, setReviewing] = useState<Set<string>>(new Set());
+  const [proposed, setProposedState] = useState<ProposedSite[]>(loadProposed);
+  const setProposed = (all: ProposedSite[]) => { setProposedState(all); saveProposed(all); };
+  // Streams proposed on this phone join the OAH sites (rejected ones disappear).
+  const extraSites = useMemo(() => proposed.filter((p) => p.status !== "rejected").map(toFacts), [proposed]);
+  const siteMap = useMemo(() => new Map([...STATIC_SITES, ...extraSites].map((s) => [s.code, s])), [extraSites]);
   const syncingRef = useRef(syncing);
   syncingRef.current = syncing;
 
   const streak = useMemo(() => adoptionStreak(checks, keeper.adopted, now), [checks, keeper.adopted, now]);
   const counts = useMemo(() => checksThisSeason(checks, now, settings.simulated), [checks, now, settings.simulated]);
-  const missions = useMissions(counts, now, streak.dueThisSeason ? keeper.adopted ?? null : null);
-  const siteName = (code: string) => SITES.get(code)?.name ?? code;
+  const missions = useMissions(counts, now, streak.dueThisSeason ? keeper.adopted ?? null : null, extraSites);
+  const siteName = (code: string) => siteMap.get(code)?.name ?? code;
 
   const setSettings = (s: Settings) => {
     setSettingsState(s);
@@ -85,7 +93,7 @@ export default function App() {
   }
 
   async function sync(check: StoredCheck) {
-    const site = SITES.get(check.siteCode);
+    const site = siteMap.get(check.siteCode);
     if (!site || syncingRef.current.has(check.id)) return;
     setSyncing((s) => new Set(s).add(check.id));
     const result = await send(checkBundle(check, site), check.practice);
@@ -95,13 +103,33 @@ export default function App() {
 
   /** Write a reviewer's decision to the server where the check already is (Observations + Provenance). */
   async function syncReview(check: StoredCheck) {
-    const site = SITES.get(check.siteCode);
+    const site = siteMap.get(check.siteCode);
     if (!site || !check.review) return;
     setReviewing((s) => new Set(s).add(check.id));
     const result = await send(reviewBundle(check, site), check.practice, check.sync?.ok ? check.sync.server : undefined);
     setChecks(updateCheck(check.id, { reviewSync: result }));
     setReviewing((s) => { const n = new Set(s); n.delete(check.id); return n; });
   }
+
+  const propose = (name: string, pos: { lat: number; lon: number }): string => {
+    const p = proposeSite(name, pos.lat, pos.lon, keeper.id, new Date(), [...siteMap.values()]);
+    setProposed([...proposed, p]);
+    return p.code;
+  };
+
+  /** Coordinator decision on a proposed stream. Approval creates it as a FHIR Location (read back). */
+  const decideSite = async (code: string, approve: boolean, reviewer: string) => {
+    const updated = proposed.map((p) => (p.code === code ? { ...p, status: approve ? "approved" as const : "rejected" as const, decidedAt: new Date().toISOString(), reviewer } : p));
+    setProposed(updated);
+    const site = updated.find((p) => p.code === code);
+    if (!approve || !site || !navigator.onLine) return;
+    const facts = toFacts(site);
+    const bundle: TransactionBundle = { resourceType: "Bundle", type: "transaction", entry: [
+      { fullUrl: `urn:uuid:${crypto.randomUUID()}`, resource: locationResource(facts), request: { method: "POST", url: "Location", ifNoneExist: `identifier=https://github.com/BriceZemba/streamkeepers/fhir/site|${code}` } },
+    ] };
+    const result = await send(bundle, settings.practice);
+    setProposedState((all) => { const next = all.map((p) => (p.code === code ? { ...p, sync: result } : p)); saveProposed(next); return next; });
+  };
 
   const decide = (id: string, decision: Decision, reviewer: string, reason?: RejectReason) => {
     const c = checks.find((x) => x.id === id);
@@ -189,6 +217,8 @@ export default function App() {
               if (m) setScreen({ name: "check", mission: m, resume: draft });
             }}
             onDiscard={() => { clearDraft(); setDraft(null); }}
+            allSites={[...siteMap.values()]}
+            onPropose={propose}
           />
         )}
         {screen.name === "check" && (
@@ -216,7 +246,7 @@ export default function App() {
             keeper={keeper}
             checks={checks}
             siteName={siteName}
-            siteGeo={(code) => SITES.get(code)}
+            siteGeo={(code) => siteMap.get(code)}
             streak={streak}
             settings={settings}
             onSettings={setSettings}
@@ -230,7 +260,9 @@ export default function App() {
         {screen.name === "coordinator" && (
           <CoordinatorView
             checks={checks}
-            sites={[...SITES.values()]}
+            sites={[...siteMap.values()]}
+            proposed={proposed}
+            onDecideSite={(code, approve, reviewer) => void decideSite(code, approve, reviewer)}
             counts={counts}
             simulated={settings.simulated}
             now={now}

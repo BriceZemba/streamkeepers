@@ -376,6 +376,23 @@ main { flex: 1; display: flex; flex-direction: column; }
 .cov-bar span { display: block; height: 100%; background: var(--moss); border-radius: 8px; }
 .cov-num { font-size: 0.8rem; text-align: right; white-space: nowrap; }
 .cov-num small { display: block; color: var(--rust); font-size: 0.72rem; }
+.about { margin-top: 26px; padding: 16px; border-radius: var(--r); background: var(--card); border: 1px solid var(--line-2); }
+.about h3 { margin: 0 0 10px; }
+.about ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 0.9rem; }
+.about li.indent { padding-left: 14px; display: flex; align-items: baseline; gap: 8px; }
+.about li.note-line { font-size: 0.78rem; color: var(--ink-3); }
+.level-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--line); transform: translateY(1px); }
+.tone-top .level-dot { background: var(--rust); }
+.tone-high .level-dot { background: var(--ochre); }
+.tone-moderate .level-dot { background: var(--river-2); }
+.tone-low .level-dot { background: var(--moss); }
+.proposed-badge { color: var(--ochre-deep); background: var(--ochre-soft); }
+.add-pos { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 10px 12px; border-radius: var(--r-sm); background: var(--card); border: 1px solid var(--line-2); }
+.add-pos .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ink-3); }
+.add-pos .dot.ok { background: var(--ochre); box-shadow: 0 0 0 4px var(--ochre-soft); }
+.add-dup { margin-top: 12px; padding: 12px 14px; border-radius: var(--r-sm); background: var(--rust-soft); color: var(--ink); }
+.add-dup p { margin: 0 0 8px; font-size: 0.88rem; font-weight: 600; }
+.draft-dot { width: 22px; height: 22px; border-radius: 50%; background: #f5e2ca; border: 3px dashed #c2702a; }
 .toast { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%); z-index: 1300; margin: 0; padding: 10px 16px; border-radius: 999px; background: var(--ink); color: var(--paper); font-weight: 650; font-size: 0.88rem; box-shadow: var(--shadow); animation: rise 0.2s ease both; }
 .btn-soft { border: 1.5px solid var(--line); background: var(--card); color: var(--ink); min-height: 46px; font-size: 0.9rem; }
 .btn-soft[aria-pressed="true"] { border-color: var(--moss); background: var(--moss-soft); color: var(--moss); }

@@ -12,14 +12,14 @@ const FACTS = buildSiteFacts();
 const PEOPLE_PCT = percentileRanks(FACTS.map((s) => s.peopleNearby));
 
 /** @param adoptedDue site code of the volunteer's adopted stream if its seasonal check is still due */
-export function useMissions(counts: Map<string, number>, now: Date, adoptedDue: string | null): Mission[] {
+export function useMissions(counts: Map<string, number>, now: Date, adoptedDue: string | null, extra: SiteFacts[] = []): Mission[] {
   return useMemo(
     () =>
-      FACTS.map((site, i) => {
+      [...FACTS, ...extra].map((site, i) => {
         const n = counts.get(site.code) ?? 0;
-        return { site, checksThisSeason: n, value: missionValue(site, { checksThisSeason: n, adoptedAndDue: site.code === adoptedDue }, now, PEOPLE_PCT[i]) };
+        return { site, checksThisSeason: n, value: missionValue(site, { checksThisSeason: n, adoptedAndDue: site.code === adoptedDue }, now, PEOPLE_PCT[i] ?? null) };
       }).sort((a, b) => b.value.points - a.value.points),
-    [counts, now, adoptedDue],
+    [counts, now, adoptedDue, extra],
   );
 }
 

@@ -47,7 +47,7 @@ export interface Msg {
 }
 
 export interface ValuePart {
-  key: "base" | "labStaleness" | "noLabRecord" | "seasonGap" | "labRisk" | "peopleNearby" | "adopted" | "coverage";
+  key: "base" | "labStaleness" | "noLabRecord" | "seasonGap" | "labRisk" | "peopleNearby" | "adopted" | "coverage" | "proposed";
   points: number;
   reason: string;
   msg: Msg;
@@ -85,6 +85,18 @@ export function missionValue(
   peoplePercentile: number | null,
   w: Weights = DEFAULT_WEIGHTS,
 ): MissionValue {
+  // A site a volunteer just proposed earns only the base until a coordinator approves it.
+  // Otherwise inventing sites next to home would farm the "no lab data" and "season gap" points.
+  if (site.status === "proposed") {
+    return {
+      points: w.base,
+      parts: [
+        { key: "base", points: w.base, reason: "Every careful check counts", msg: { key: "reason.base" } },
+        { key: "proposed", points: 0, reason: "Proposed site: full points once a coordinator approves it", msg: { key: "reason.proposed" } },
+      ],
+    };
+  }
+
   const need: ValuePart[] = [];
 
   if (site.lastLabDate) {

@@ -19,7 +19,9 @@ const DOMAIN_KEYS = [
   "gate.complete.missing", "gate.complete.unsure", "gate.complete.ok", "gate.careful.ok", "gate.careful.fast",
   "gate.atSite.practice", "gate.atSite.noGps", "gate.atSite.ok", "gate.atSite.far", "gate.consistent.ok",
   "gate.c.goodPolluted", "gate.c.poorNatural", "gate.c.clearMuddy", "gate.c.unsureAndOption", "gate.c.dryWater",
-  "gate.dup.yes", "gate.dup.no",
+  "gate.dup.yes", "gate.dup.no", "reason.proposed",
+  "about.lab", "about.pathogen", "about.fecal", "about.arg", "about.scaleNote", "about.noLab", "about.land", "about.distances",
+  "about.citizen", "about.proposed", "about.approved", "level.top", "level.high", "level.moderate", "level.low", "add.nameShort", "add.nameLong", "add.nameLetters",
 ];
 
 describe.each([["pt", pt], ["fr", fr]] as const)("%s translation", (_, dict) => {

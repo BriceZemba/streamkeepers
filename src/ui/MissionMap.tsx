@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { Circle, CircleMarker, MapContainer, Marker, TileLayer, Tooltip, useMap } from "react-leaflet";
+import { Circle, CircleMarker, MapContainer, Marker, TileLayer, Tooltip, useMap, useMapEvents } from "react-leaflet";
 import { divIcon, latLngBounds } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { band, type Mission } from "./useMissions";
@@ -27,6 +27,11 @@ function FitTo({ missions, me }: { missions: Mission[]; me: Me | null }) {
     // Fit only when the set of sites changes, not on every points update.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, map]);
+  return null;
+}
+
+function TapToPlace({ onTap }: { onTap?: (p: { lat: number; lon: number }) => void }) {
+  useMapEvents({ click: (e) => onTap?.({ lat: e.latlng.lat, lon: e.latlng.lng }) });
   return null;
 }
 
@@ -59,7 +64,7 @@ const icon = (m: Mission, selected: boolean) =>
 
 export type FlatView = "plan" | "satellite";
 
-export function MissionMap({ missions, selected, onSelect, label, me, view = "plan" }: { missions: Mission[]; selected: Mission | null; onSelect: (code: string) => void; label: string; me: Me | null; view?: FlatView }) {
+export function MissionMap({ missions, selected, onSelect, label, me, view = "plan", draft, onMapTap }: { missions: Mission[]; selected: Mission | null; onSelect: (code: string) => void; label: string; me: Me | null; view?: FlatView; draft?: { lat: number; lon: number } | null; onMapTap?: (p: { lat: number; lon: number }) => void }) {
   const { t } = useI18n();
   // Draw higher-value pins on top.
   const ordered = useMemo(() => [...missions].sort((a, b) => a.value.points - b.value.points), [missions]);
@@ -91,6 +96,12 @@ export function MissionMap({ missions, selected, onSelect, label, me, view = "pl
         )}
         <KeepSized />
         <FitTo missions={missions} me={me} />
+        {onMapTap && <TapToPlace onTap={onMapTap} />}
+        {draft && (
+          <CircleMarker center={[draft.lat, draft.lon]} radius={11} pathOptions={{ color: "#c2702a", weight: 3, dashArray: "4 4", fillColor: "#f5e2ca", fillOpacity: 0.9 }}>
+            <Tooltip direction="top" permanent>+</Tooltip>
+          </CircleMarker>
+        )}
         {me && (
           <>
             <Circle center={[me.lat, me.lon]} radius={Math.min(me.accuracyM, 2000)} pathOptions={{ color: "#2f7b98", weight: 1, fillOpacity: 0.12 }} interactive={false} />

@@ -33,9 +33,13 @@ export interface MapViewsProps {
   me: Me | null;
   locating: boolean;
   onLocate: () => void;
+  onAdd: () => void;
+  adding: boolean;
+  draft: { lat: number; lon: number } | null;
+  onMapTap?: (p: { lat: number; lon: number }) => void;
 }
 
-export function MapViews({ missions, selected, onSelect, label, me, locating, onLocate }: MapViewsProps) {
+export function MapViews({ missions, selected, onSelect, label, me, locating, onLocate, onAdd, adding, draft, onMapTap }: MapViewsProps) {
   const { t } = useI18n();
   const [view, setView] = useState<View>(initial);
   const [full, setFull] = useState(false);
@@ -55,7 +59,7 @@ export function MapViews({ missions, selected, onSelect, label, me, locating, on
     return () => { document.body.style.overflow = prev; removeEventListener("keydown", onKey); };
   }, [full]);
 
-  const props = { missions, selected, onSelect, label, me };
+  const props = { missions, selected, onSelect, label, me, draft, onMapTap: adding ? onMapTap : undefined };
   return (
     <div className={`map-wrap${full ? " is-full" : ""}`}>
       {view === "3d" ? (
@@ -73,6 +77,11 @@ export function MapViews({ missions, selected, onSelect, label, me, locating, on
       </div>
 
       <div className="map-tools">
+        {!adding && (
+          <button className="map-tool" onClick={onAdd} aria-label={t("add.button")} title={t("add.button")}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+          </button>
+        )}
         <button className="map-tool" onClick={() => setFull((f) => !f)} aria-label={full ? t("map.exitFull") : t("map.full")} title={full ? t("map.exitFull") : t("map.full")}>
           {full ? (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>

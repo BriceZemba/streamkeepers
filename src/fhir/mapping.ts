@@ -30,6 +30,8 @@ export const EXT_CREDITED_POINTS = `${SK}/StructureDefinition/credited-points`;
 export const EXT_GATE = `${SK}/StructureDefinition/quality-gate`;
 export const SITE_ID_SYSTEM = "https://api.enora-oah.eu/api/sites";
 export const KEEPER_ID_SYSTEM = `${SK}/keeper`;
+/** OAH sites keep their ENORA code; streams proposed in StreamKeepers ("SK-…") get our own system. */
+export const siteIdSystem = (code: string) => (code.startsWith("SK-") ? `${SK}/site` : SITE_ID_SYSTEM);
 const HTEST = { system: "http://terminology.hl7.org/CodeSystem/v3-ActReason", code: "HTEST", display: "test health data" };
 /** Explicit answers, so "nothing seen" and "not sure" are coded data, not missing answers. */
 export const NONE_OF_THESE = { system: SK_CS, code: "none-of-these", display: "None of these" };
@@ -116,11 +118,11 @@ export function location(site: SiteFacts): Json {
     resourceType: "Location",
     meta: { profile: [PROFILE_LOC], tag: [SK_TAG] },
     text: narrative(`${site.name} (${site.kind === "research" ? `OneAquaHealth research site ${site.code}, ${site.cityName}` : "citizen-created site"})`),
-    identifier: [{ system: SITE_ID_SYSTEM, value: site.code }],
+    identifier: [{ system: siteIdSystem(site.code), value: site.code }],
     name: site.name,
     mode: "instance",
     status: "active",
-    description: site.kind === "research" ? `OneAquaHealth research site ${site.code}, ${site.cityName}` : "Citizen-created stream site (OneAquaHealth app)",
+    description: site.kind === "research" ? `OneAquaHealth research site ${site.code}, ${site.cityName}` : site.code.startsWith("SK-") ? "Stream proposed by a volunteer in StreamKeepers, approved by a coordinator" : "Citizen-created stream site (OneAquaHealth app)",
     position: { latitude: site.lat, longitude: site.lon },
   };
 }
@@ -258,7 +260,7 @@ export function checkBundle(check: StoredCheck, site: SiteFacts): TransactionBun
   const loc = uuid(), keeper = uuid(), qr = uuid(), q = uuid();
   const entry: BundleEntry[] = [
     { fullUrl: q, resource: questionnaire(), request: { method: "POST", url: "Questionnaire", ifNoneExist: `url=${SK_QUESTIONNAIRE}&version=${SK_QUESTIONNAIRE_VERSION}` } },
-    { fullUrl: loc, resource: location(site), request: { method: "POST", url: "Location", ifNoneExist: `identifier=${SITE_ID_SYSTEM}|${site.code}` } },
+    { fullUrl: loc, resource: location(site), request: { method: "POST", url: "Location", ifNoneExist: `identifier=${siteIdSystem(site.code)}|${site.code}` } },
     { fullUrl: keeper, resource: practitioner(check.keeperId), request: { method: "POST", url: "Practitioner", ifNoneExist: `identifier=${KEEPER_ID_SYSTEM}|${check.keeperId}` } },
     { fullUrl: qr, resource: questionnaireResponse(check, loc, keeper), request: { method: "POST", url: "QuestionnaireResponse", ifNoneExist: `identifier=${SK}/check|${check.id}` } },
   ];

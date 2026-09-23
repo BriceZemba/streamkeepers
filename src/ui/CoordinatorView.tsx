@@ -4,13 +4,14 @@ import { DEFAULT_WEIGHTS, seasonOf, seasonOrdinal, type Weights } from "../domai
 import { isPending, REJECT_REASONS, type Decision, type RejectReason } from "../domain/review";
 import { CITIES, type SiteFacts } from "../domain/siteFacts";
 import type { StoredCheck } from "../domain/store";
+import type { ProposedSite } from "../domain/proposedSites";
 import { useI18n } from "../i18n";
 import { Contours } from "./glyphs";
 
 const KEY_REVIEWER = "sk.reviewer.v1";
 const readReviewer = () => { try { return localStorage.getItem(KEY_REVIEWER) ?? ""; } catch { return ""; } };
 
-export function CoordinatorView({ checks, sites, counts, simulated, now, reviewing, onDecide, onRetryReview, onBack, onOpenSite }: {
+export function CoordinatorView({ checks, sites, counts, simulated, now, reviewing, onDecide, onRetryReview, onBack, onOpenSite, proposed, onDecideSite }: {
   checks: StoredCheck[];
   sites: SiteFacts[];
   /** Accepted checks per site this season (device + optional simulated activity). */
@@ -22,6 +23,8 @@ export function CoordinatorView({ checks, sites, counts, simulated, now, reviewi
   onRetryReview: (checkId: string) => void;
   onBack: () => void;
   onOpenSite: (code: string) => void;
+  proposed: ProposedSite[];
+  onDecideSite: (code: string, approve: boolean, reviewer: string) => void;
 }) {
   const { t, lang, q: qText, opt } = useI18n();
   const locale = lang === "pt" ? "pt-PT" : lang === "fr" ? "fr-FR" : "en-GB";
@@ -154,6 +157,34 @@ export function CoordinatorView({ checks, sites, counts, simulated, now, reviewi
             ))}
           </ul>
         </>
+      )}
+
+      {/* Proposed streams */}
+      <h2 style={{ marginTop: 18 }}>{t("coord.sites")}</h2>
+      <p className="small muted" style={{ margin: "4px 0 10px" }}>{t("coord.sitesHint")}</p>
+      {proposed.length === 0 ? <p className="empty">{t("coord.sitesEmpty")}</p> : (
+        <ul className="entries">
+          {[...proposed].reverse().map((p) => (
+            <li key={p.code} className="entry">
+              <span>
+                <span className="entry-title" style={{ display: "block" }}>{p.name}</span>
+                <span className="entry-sub">
+                  {p.lat.toFixed(4)}, {p.lon.toFixed(4)} · {fmtDate(p.createdAt)}
+                  {p.status === "approved" && ` · ${t("coord.siteApproved", { name: p.reviewer ?? "" })}${p.sync?.ok ? ` · ${t("coord.fhirOk", { n: p.sync.refs.length })}` : ""}`}
+                  {p.status === "rejected" && ` · ${t("coord.siteRejected", { name: p.reviewer ?? "" })}`}
+                </span>
+              </span>
+              {p.status === "proposed" ? (
+                <span style={{ display: "flex", gap: 6 }}>
+                  <button className="btn btn-primary btn-sm" onClick={() => onDecideSite(p.code, true, who)}>✓ {t("coord.approve")}</button>
+                  <button className="btn btn-sm" onClick={() => onDecideSite(p.code, false, who)} aria-label={t("coord.reject")}>✕</button>
+                </span>
+              ) : (
+                <span className={`pill ${p.status === "approved" ? "pill-ok" : "pill-hold"}`}>{p.status === "approved" ? "✓" : "✕"}</span>
+              )}
+            </li>
+          ))}
+        </ul>
       )}
 
       {/* Coverage */}
