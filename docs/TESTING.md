@@ -45,9 +45,11 @@ Open the `Network:` address it prints (e.g. `http://192.168.1.20:5173/?practice=
 Browsers only share GPS with HTTPS pages, so on this local address use practice mode.
 For real GPS, use the hosted HTTPS version (from Fri Sep 25).
 
-## 3. User test (Sun Sep 27, 5–8 people, ~15 min each)
+## 3. User test (5–8 people, ~15 min each, two waves)
 
-Use the hosted link with `?practice=1`. Remote over video call with screen sharing is fine. Don't help unless the person is stuck for more than 60 s, and note where they got stuck.
+Wave 1 on Fri Sep 25, fixes on Sat Sep 26, wave 2 on Sun Sep 27 with the fixed app and different people. Report the waves separately.
+
+Use the hosted link with `?practice=1` (add `&lang=fr` or `&lang=pt` for the participant's language). Remote over video call with screen sharing is fine. Don't help unless the person is stuck for more than 60 s, and note where they got stuck.
 
 **Before (1 min):** age range, ever used a citizen-science or nature app (yes/no), phone type.
 
