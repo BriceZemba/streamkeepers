@@ -95,11 +95,14 @@ export function missionValue(
     });
   }
 
-  if (peoplePercentile !== null) {
+  if (peoplePercentile !== null && peoplePercentile > 0) {
     need.push({
       key: "peopleNearby",
       points: w.peopleNearby * peoplePercentile,
-      reason: `More people live near this water than at ${Math.round(peoplePercentile * 100)}% of OAH sites`,
+      reason:
+        peoplePercentile >= 0.5
+          ? `More people live near this water than at ${Math.round(peoplePercentile * 100)}% of OAH sites`
+          : "Some people live near this water",
     });
   }
 

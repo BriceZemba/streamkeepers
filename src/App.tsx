@@ -1,122 +1,85 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useMemo, useState } from "react";
+import { evaluate } from "./domain/qualityGate";
+import { checksThisSeason, clearChecks, loadChecks, loadKeeper, saveCheck, saveKeeper, type StoredCheck } from "./domain/store";
+import { CheckFlow, type CheckDraft } from "./ui/CheckFlow";
+import { KeeperView, type Settings } from "./ui/KeeperView";
+import { MissionsView } from "./ui/MissionsView";
+import { ResultView } from "./ui/ResultView";
+import { useMissions, type Mission } from "./ui/useMissions";
 
-function App() {
-  const [count, setCount] = useState(0)
+type Screen = { name: "missions" } | { name: "keeper" } | { name: "check"; mission: Mission } | { name: "result"; check: StoredCheck; siteName: string };
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+const SETTINGS_KEY = "sk.settings.v1";
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+function initialSettings(): Settings {
+  const fromUrl = new URLSearchParams(location.search).has("practice");
+  try {
+    const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) ?? "null") as Settings | null;
+    if (saved) return { ...saved, practice: saved.practice || fromUrl };
+  } catch { /* ignore */ }
+  return { practice: fromUrl, simulated: true };
 }
 
-export default App
+export default function App() {
+  const [screen, setScreen] = useState<Screen>({ name: "missions" });
+  const [checks, setChecks] = useState<StoredCheck[]>(loadChecks);
+  const [keeper, setKeeper] = useState(loadKeeper);
+  const [settings, setSettingsState] = useState<Settings>(initialSettings);
+  const [now, setNow] = useState(() => new Date());
+
+  const counts = useMemo(() => checksThisSeason(checks, now, settings.simulated), [checks, now, settings.simulated]);
+  const missions = useMissions(counts, now);
+  const siteName = (code: string) => missions.find((m) => m.site.code === code)?.site.name ?? code;
+
+  const setSettings = (s: Settings) => {
+    setSettingsState(s);
+    try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch { /* ignore */ }
+  };
+
+  const submit = (mission: Mission, d: CheckDraft) => {
+    const sub = { siteCode: mission.site.code, keeperId: keeper.id, practice: settings.practice, ...d };
+    const gate = evaluate(sub, checks);
+    const credited = gate.outcome === "ACCEPTED" && !gate.noNewPoints ? mission.value.points : 0;
+    const stored: StoredCheck = { ...sub, id: crypto.randomUUID(), gate, missionPoints: mission.value.points, creditedPoints: credited };
+    setChecks(saveCheck(stored));
+    setNow(new Date());
+    setScreen({ name: "result", check: stored, siteName: mission.site.name });
+  };
+
+  const inCheck = screen.name === "check";
+
+  return (
+    <div className="app">
+      {!inCheck && (
+        <header className="topbar">
+          <span className="brand"><span aria-hidden="true">≋</span> StreamKeepers</span>
+          {settings.practice && <span className="tag review">Practice mode</span>}
+        </header>
+      )}
+      <main id="main">
+        {screen.name === "missions" && <MissionsView missions={missions} simulated={settings.simulated} onStart={(m) => setScreen({ name: "check", mission: m })} />}
+        {screen.name === "check" && (
+          <CheckFlow mission={screen.mission} practice={settings.practice} onCancel={() => setScreen({ name: "missions" })} onSubmit={(d) => submit(screen.mission, d)} />
+        )}
+        {screen.name === "result" && <ResultView check={screen.check} siteName={screen.siteName} onDone={() => setScreen({ name: "missions" })} />}
+        {screen.name === "keeper" && (
+          <KeeperView
+            keeper={keeper}
+            checks={checks}
+            siteName={siteName}
+            settings={settings}
+            onSettings={setSettings}
+            onName={(name) => { const k = { ...keeper, name }; setKeeper(k); saveKeeper(k); }}
+            onReset={() => { clearChecks(); setChecks([]); }}
+          />
+        )}
+      </main>
+      {!inCheck && (
+        <nav className="tabbar" aria-label="Main">
+          <button aria-current={screen.name === "missions" ? "page" : undefined} onClick={() => setScreen({ name: "missions" })}>Missions</button>
+          <button aria-current={screen.name === "keeper" ? "page" : undefined} onClick={() => setScreen({ name: "keeper" })}>Me</button>
+        </nav>
+      )}
+    </div>
+  );
+}
