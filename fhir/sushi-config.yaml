@@ -1,0 +1,7 @@
+# FHIR definitions StreamKeepers uses on top of the OneAquaHealth IG
+# (hl7-eu/oah). Compile with: npx fsh-sushi build fhir   (see docs/FHIR-VALIDATION.md)
+canonical: https://github.com/BriceZemba/streamkeepers/fhir
+status: draft
+version: 0.1.0
+fhirVersion: 4.0.1
+FSHOnly: true

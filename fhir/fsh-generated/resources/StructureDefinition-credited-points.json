@@ -1,0 +1,51 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "credited-points",
+  "url": "https://github.com/BriceZemba/streamkeepers/fhir/StructureDefinition/credited-points",
+  "version": "0.1.0",
+  "name": "CreditedPoints",
+  "title": "StreamKeepers credited points",
+  "status": "draft",
+  "description": "Points actually credited: the mission points if the quality gate or a reviewer accepted the check, otherwise 0.",
+  "fhirVersion": "4.0.1",
+  "kind": "complex-type",
+  "abstract": false,
+  "context": [
+    {
+      "expression": "QuestionnaireResponse",
+      "type": "element"
+    }
+  ],
+  "type": "Extension",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Extension",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "Extension",
+        "path": "Extension",
+        "short": "StreamKeepers credited points",
+        "definition": "Points actually credited: the mission points if the quality gate or a reviewer accepted the check, otherwise 0."
+      },
+      {
+        "id": "Extension.extension",
+        "path": "Extension.extension",
+        "max": "0"
+      },
+      {
+        "id": "Extension.url",
+        "path": "Extension.url",
+        "fixedUri": "https://github.com/BriceZemba/streamkeepers/fhir/StructureDefinition/credited-points"
+      },
+      {
+        "id": "Extension.value[x]",
+        "path": "Extension.value[x]",
+        "type": [
+          {
+            "code": "integer"
+          }
+        ]
+      }
+    ]
+  }
+}

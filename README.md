@@ -41,10 +41,11 @@ Every number below comes from a script in this repository; nothing is hand-typed
 | What points do **not** do | They don't move effort towards distant high-risk sites: the share of checks made at high-risk sites stays about 24%, even with a 3× larger risk weight. Volunteers check streams near home. | same file, "what-if" table |
 | The quality check never penalises a genuine pollution report | A careful, consistent polluted-stream report is accepted like a clean one; rushed, far-away or contradictory ones go to review. | [`src/domain/qualityGate.test.ts`](src/domain/qualityGate.test.ts) |
 | Checks are stored as OneAquaHealth FHIR and verified | An accepted check becomes 11 FHIR resources (QuestionnaireResponse, 7 `observation-indicators-oah` Observations, Location, Questionnaire, Practitioner); each is read back with a separate GET and compared. Reused resources are not duplicated. | `npm run fhir:smoke`, [`eval/fhir_smoke_last.json`](eval/fhir_smoke_last.json), [`src/fhir/mapping.test.ts`](src/fhir/mapping.test.ts) |
+| The FHIR output is valid | **0 errors, 0 warnings** with the official HL7 validator, against FHIR R4, the OneAquaHealth IG and the StreamKeepers definitions in [`fhir/`](fhir/), on an accepted check, a held check and a reviewer decision. The first run found 5 errors per file; all fixed and documented. | [`eval/fhir/validation-summary.md`](eval/fhir/validation-summary.md), [docs/FHIR-VALIDATION.md](docs/FHIR-VALIDATION.md), `npm run fhir:validate` |
 | Reviewer decisions are recorded in FHIR | Accepting a held check writes the `observation-indicators-oah` Observations, derived from the stored QuestionnaireResponse, plus a Provenance naming the reviewer as verifier; rejecting writes a Provenance with the reason. Checked on the live server by independent reads. | [`src/fhir/review.test.ts`](src/fhir/review.test.ts) |
 | Every screen works in English, Portuguese and French | A test fails if any question, answer, reason or message is missing a translation or a placeholder. | [`src/i18n/coverage.test.ts`](src/i18n/coverage.test.ts) |
 
-`npm test` runs 50 tests.
+`npm test` runs 51 tests.
 
 ## How it differs from what OneAquaHealth already has
 
@@ -68,7 +69,7 @@ Things to look for:
 ```bash
 npm install
 npm run dev            # http://localhost:5173/?practice=1
-npm test               # 50 tests
+npm test               # 51 tests
 npm run simulate       # rewrites eval/sim_results.md (about a minute)
 npm run fhir:smoke     # writes a practice check to a FHIR server and reads it back
 npm run snapshot       # refreshes the OneAquaHealth data snapshot
@@ -102,7 +103,7 @@ flowchart LR
 
 | Resource | Profile / code | When |
 |---|---|---|
-| QuestionnaireResponse | answers with the official OAH app code systems | every check |
+| QuestionnaireResponse | answers with the official OAH app code systems; "none of these" and "not sure" are explicit codes | every check |
 | Observation | `observation-indicators-oah`, status `final`: `morophology`, `hydrology`, `foam`, `riparianVegetation`, `LandUse`, `invasiveOrganisms` | only checks that passed the quality check |
 | Location | `location-oah`, identifier = OAH site code | created once (conditional create) |
 | Practitioner | pseudonymous volunteer ID, no name | created once |

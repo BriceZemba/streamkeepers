@@ -1,0 +1,79 @@
+{
+  "resourceType": "CodeSystem",
+  "status": "draft",
+  "content": "complete",
+  "name": "StreamKeepers",
+  "id": "streamkeepers",
+  "title": "StreamKeepers codes",
+  "description": "Tag and component codes used by StreamKeepers where the OneAquaHealth temporary code system has no concept.",
+  "version": "0.1.0",
+  "url": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+  "concept": [
+    {
+      "code": "streamkeepers",
+      "display": "Created by StreamKeepers"
+    },
+    {
+      "code": "channel-type",
+      "display": "Channel type"
+    },
+    {
+      "code": "channel-form",
+      "display": "Channel form"
+    },
+    {
+      "code": "bank-type",
+      "display": "Bank type"
+    },
+    {
+      "code": "habitat",
+      "display": "Habitat present"
+    },
+    {
+      "code": "natural-debris",
+      "display": "Natural debris present"
+    },
+    {
+      "code": "water-flow",
+      "display": "Water flow"
+    },
+    {
+      "code": "water-aspect",
+      "display": "Water aspect"
+    },
+    {
+      "code": "sewage-signs",
+      "display": "Signs of sewage (smell, grey water, paper)"
+    },
+    {
+      "code": "impervious-margins",
+      "display": "Paved or built-up margins"
+    },
+    {
+      "code": "draining-pipes",
+      "display": "Draining pipes"
+    },
+    {
+      "code": "construction",
+      "display": "Construction in or near the stream"
+    },
+    {
+      "code": "barriers",
+      "display": "Barriers to flow"
+    },
+    {
+      "code": "citizen-overall-assessment",
+      "display": "Citizen overall stream assessment"
+    },
+    {
+      "code": "none-of-these",
+      "display": "None of these"
+    },
+    {
+      "code": "not-sure",
+      "display": "Not sure"
+    }
+  ],
+  "caseSensitive": true,
+  "count": 16
+}

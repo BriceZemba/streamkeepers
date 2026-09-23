@@ -3,11 +3,11 @@
  "type": "transaction",
  "entry": [
   {
-   "fullUrl": "urn:uuid:febd582a-3b74-41b5-a959-71b9ef58d27e",
+   "fullUrl": "urn:uuid:30760852-1e81-49a2-aa64-c3dc70471f05",
    "resource": {
     "resourceType": "Questionnaire",
     "url": "https://github.com/BriceZemba/streamkeepers/fhir/Questionnaire/stream-check",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "name": "StreamKeepersStreamCheck",
     "title": "StreamKeepers stream check (OneAquaHealth citizen protocol, plain language)",
     "status": "draft",
@@ -22,9 +22,13 @@
       }
      ]
     },
+    "text": {
+     "status": "generated",
+     "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>StreamKeepers stream check: the OneAquaHealth citizen stream assessment in plain language, with the official answer codes.</p></div>"
+    },
     "item": [
      {
-      "linkId": "water",
+      "linkId": "step-water",
       "text": "The water",
       "type": "group",
       "item": [
@@ -69,7 +73,7 @@
       ]
      },
      {
-      "linkId": "colour",
+      "linkId": "step-colour",
       "text": "What the water looks like",
       "type": "group",
       "item": [
@@ -108,13 +112,27 @@
            "code": "CO",
            "display": "Has colors/altered color"
           }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "none-of-these",
+           "display": "None of these"
+          }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "not-sure",
+           "display": "Not sure"
+          }
          }
         ]
        }
       ]
      },
      {
-      "linkId": "channel",
+      "linkId": "step-channel",
       "text": "The stream bed",
       "type": "group",
       "item": [
@@ -138,6 +156,13 @@
            "system": "https://api.enora-oah.eu/api/citizens/channel_types",
            "code": "ART",
            "display": "Artificial (concrete or stones with concrete)"
+          }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "not-sure",
+           "display": "Not sure"
           }
          }
         ]
@@ -170,6 +195,13 @@
            "code": "V",
            "display": "V Shape"
           }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "not-sure",
+           "display": "Not sure"
+          }
          }
         ]
        },
@@ -201,13 +233,20 @@
            "code": "LAS",
            "display": "Layed stones with no concrete"
           }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "not-sure",
+           "display": "Not sure"
+          }
          }
         ]
        }
       ]
      },
      {
-      "linkId": "life",
+      "linkId": "step-life",
       "text": "Places for life",
       "type": "group",
       "item": [
@@ -253,6 +292,20 @@
            "code": "SD",
            "display": "Stone deposits"
           }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "none-of-these",
+           "display": "None of these"
+          }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "not-sure",
+           "display": "Not sure"
+          }
          }
         ]
        },
@@ -284,13 +337,27 @@
            "code": "FL",
            "display": "Deposits of fallen leaves"
           }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "none-of-these",
+           "display": "None of these"
+          }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "not-sure",
+           "display": "Not sure"
+          }
          }
         ]
        }
       ]
      },
      {
-      "linkId": "pressures",
+      "linkId": "step-pressures",
       "text": "Signs of pressure",
       "type": "group",
       "item": [
@@ -322,6 +389,13 @@
            "code": "FLOWING",
            "display": "Pipes with water coming out"
           }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "not-sure",
+           "display": "Not sure"
+          }
          }
         ]
        },
@@ -345,6 +419,13 @@
            "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-sewage-signs",
            "code": "NO",
            "display": "No"
+          }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "not-sure",
+           "display": "Not sure"
           }
          }
         ]
@@ -370,6 +451,13 @@
            "code": "NO",
            "display": "No"
           }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "not-sure",
+           "display": "Not sure"
+          }
          }
         ]
        },
@@ -393,6 +481,13 @@
            "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-construction",
            "code": "NO",
            "display": "No"
+          }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "not-sure",
+           "display": "Not sure"
           }
          }
         ]
@@ -418,13 +513,20 @@
            "code": "NO",
            "display": "No"
           }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "not-sure",
+           "display": "Not sure"
+          }
          }
         ]
        }
       ]
      },
      {
-      "linkId": "banks",
+      "linkId": "step-banks",
       "text": "The banks",
       "type": "group",
       "item": [
@@ -455,6 +557,20 @@
            "system": "https://api.enora-oah.eu/api/citizens/vegetation_types",
            "code": "T",
            "display": "Trees"
+          }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "none-of-these",
+           "display": "None of these"
+          }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "not-sure",
+           "display": "Not sure"
           }
          }
         ]
@@ -487,6 +603,20 @@
            "code": "T",
            "display": "Trees"
           }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "none-of-these",
+           "display": "None of these"
+          }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "not-sure",
+           "display": "Not sure"
+          }
          }
         ]
        },
@@ -518,13 +648,20 @@
            "code": "MOST",
            "display": "Most"
           }
+         },
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "not-sure",
+           "display": "Not sure"
+          }
          }
         ]
        }
       ]
      },
      {
-      "linkId": "overall",
+      "linkId": "step-overall",
       "text": "Your overall view",
       "type": "group",
       "item": [
@@ -566,11 +703,11 @@
    "request": {
     "method": "POST",
     "url": "Questionnaire",
-    "ifNoneExist": "url=https://github.com/BriceZemba/streamkeepers/fhir/Questionnaire/stream-check&version=0.1.0"
+    "ifNoneExist": "url=https://github.com/BriceZemba/streamkeepers/fhir/Questionnaire/stream-check&version=0.2.0"
    }
   },
   {
-   "fullUrl": "urn:uuid:2ed4fd65-a5c6-4964-9789-04d845b108c3",
+   "fullUrl": "urn:uuid:c053b74f-4f05-4361-a1d5-9d9f3f6be82c",
    "resource": {
     "resourceType": "Location",
     "meta": {
@@ -584,6 +721,10 @@
        "display": "Created by StreamKeepers"
       }
      ]
+    },
+    "text": {
+     "status": "generated",
+     "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Mina Hospital (OneAquaHealth research site C5, Coimbra)</p></div>"
     },
     "identifier": [
      {
@@ -607,7 +748,7 @@
    }
   },
   {
-   "fullUrl": "urn:uuid:32fe1eeb-79e7-4e46-b54c-287993d24ea5",
+   "fullUrl": "urn:uuid:5c1c5f41-4d67-4ab0-9917-c4a8a02bd70d",
    "resource": {
     "resourceType": "Practitioner",
     "meta": {
@@ -618,6 +759,10 @@
        "display": "Created by StreamKeepers"
       }
      ]
+    },
+    "text": {
+     "status": "generated",
+     "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Pseudonymous StreamKeepers volunteer (no name or contact details).</p></div>"
     },
     "identifier": [
      {
@@ -634,7 +779,7 @@
    }
   },
   {
-   "fullUrl": "urn:uuid:371b0831-24f6-465e-8c02-b2a260a828b7",
+   "fullUrl": "urn:uuid:65953ed0-005a-47e7-9568-0b1550a7f17f",
    "resource": {
     "resourceType": "QuestionnaireResponse",
     "meta": {
@@ -646,18 +791,22 @@
       }
      ]
     },
+    "text": {
+     "status": "generated",
+     "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Citizen stream check (passed the quality gate), 2026-09-24.</p></div>"
+    },
     "identifier": {
      "system": "https://github.com/BriceZemba/streamkeepers/fhir/check",
      "value": "example-accepted"
     },
-    "questionnaire": "https://github.com/BriceZemba/streamkeepers/fhir/Questionnaire/stream-check|0.1.0",
+    "questionnaire": "https://github.com/BriceZemba/streamkeepers/fhir/Questionnaire/stream-check|0.2.0",
     "status": "completed",
     "subject": {
-     "reference": "urn:uuid:2ed4fd65-a5c6-4964-9789-04d845b108c3"
+     "reference": "urn:uuid:c053b74f-4f05-4361-a1d5-9d9f3f6be82c"
     },
     "authored": "2026-09-24T10:05:00Z",
     "author": {
-     "reference": "urn:uuid:32fe1eeb-79e7-4e46-b54c-287993d24ea5"
+     "reference": "urn:uuid:5c1c5f41-4d67-4ab0-9917-c4a8a02bd70d"
     },
     "extension": [
      {
@@ -700,7 +849,7 @@
     ],
     "item": [
      {
-      "linkId": "water",
+      "linkId": "step-water",
       "item": [
        {
         "linkId": "water_flow",
@@ -718,7 +867,7 @@
       ]
      },
      {
-      "linkId": "colour",
+      "linkId": "step-colour",
       "item": [
        {
         "linkId": "water_color",
@@ -743,7 +892,7 @@
       ]
      },
      {
-      "linkId": "channel",
+      "linkId": "step-channel",
       "item": [
        {
         "linkId": "channel_type",
@@ -787,7 +936,7 @@
       ]
      },
      {
-      "linkId": "life",
+      "linkId": "step-life",
       "item": [
        {
         "linkId": "habitats",
@@ -805,12 +954,20 @@
        {
         "linkId": "fallen_biomass",
         "text": "Is there wood or leaves in the stream?",
-        "answer": []
+        "answer": [
+         {
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "none-of-these",
+           "display": "None of these"
+          }
+         }
+        ]
        }
       ]
      },
      {
-      "linkId": "pressures",
+      "linkId": "step-pressures",
       "item": [
        {
         "linkId": "draining_pipes",
@@ -869,14 +1026,18 @@
         "text": "Did you see plants or animals that don't belong here?",
         "answer": [
          {
-          "valueString": "not sure"
+          "valueCoding": {
+           "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+           "code": "not-sure",
+           "display": "Not sure"
+          }
          }
         ]
        }
       ]
      },
      {
-      "linkId": "banks",
+      "linkId": "step-banks",
       "item": [
        {
         "linkId": "vegetation_left",
@@ -927,7 +1088,7 @@
       ]
      },
      {
-      "linkId": "overall",
+      "linkId": "step-overall",
       "item": [
        {
         "linkId": "overall",
@@ -953,7 +1114,7 @@
    }
   },
   {
-   "fullUrl": "urn:uuid:eeb3871c-613c-46b6-9ed3-652d63b894ef",
+   "fullUrl": "urn:uuid:ecb0613a-c4dc-477e-9064-21655982e799",
    "resource": {
     "resourceType": "Observation",
     "meta": {
@@ -967,6 +1128,10 @@
        "display": "Created by StreamKeepers"
       }
      ]
+    },
+    "text": {
+     "status": "generated",
+     "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Morphology of the streams observed by a citizen volunteer, 2026-09-24.</p></div>"
     },
     "status": "final",
     "category": [
@@ -990,17 +1155,17 @@
      ]
     },
     "subject": {
-     "reference": "urn:uuid:2ed4fd65-a5c6-4964-9789-04d845b108c3"
+     "reference": "urn:uuid:c053b74f-4f05-4361-a1d5-9d9f3f6be82c"
     },
     "effectiveDateTime": "2026-09-24T10:05:00Z",
     "performer": [
      {
-      "reference": "urn:uuid:32fe1eeb-79e7-4e46-b54c-287993d24ea5"
+      "reference": "urn:uuid:5c1c5f41-4d67-4ab0-9917-c4a8a02bd70d"
      }
     ],
     "derivedFrom": [
      {
-      "reference": "urn:uuid:371b0831-24f6-465e-8c02-b2a260a828b7"
+      "reference": "urn:uuid:65953ed0-005a-47e7-9568-0b1550a7f17f"
      }
     ],
     "component": [
@@ -1092,7 +1257,7 @@
    }
   },
   {
-   "fullUrl": "urn:uuid:c315e8bf-bbcf-4f61-a063-5ca8b57f46ee",
+   "fullUrl": "urn:uuid:1c8497b4-5a54-4c14-9748-cd09df3190c7",
    "resource": {
     "resourceType": "Observation",
     "meta": {
@@ -1106,6 +1271,10 @@
        "display": "Created by StreamKeepers"
       }
      ]
+    },
+    "text": {
+     "status": "generated",
+     "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Hydrology of the stream observed by a citizen volunteer, 2026-09-24.</p></div>"
     },
     "status": "final",
     "category": [
@@ -1129,17 +1298,17 @@
      ]
     },
     "subject": {
-     "reference": "urn:uuid:2ed4fd65-a5c6-4964-9789-04d845b108c3"
+     "reference": "urn:uuid:c053b74f-4f05-4361-a1d5-9d9f3f6be82c"
     },
     "effectiveDateTime": "2026-09-24T10:05:00Z",
     "performer": [
      {
-      "reference": "urn:uuid:32fe1eeb-79e7-4e46-b54c-287993d24ea5"
+      "reference": "urn:uuid:5c1c5f41-4d67-4ab0-9917-c4a8a02bd70d"
      }
     ],
     "derivedFrom": [
      {
-      "reference": "urn:uuid:371b0831-24f6-465e-8c02-b2a260a828b7"
+      "reference": "urn:uuid:65953ed0-005a-47e7-9568-0b1550a7f17f"
      }
     ],
     "component": [
@@ -1171,7 +1340,7 @@
    }
   },
   {
-   "fullUrl": "urn:uuid:f6496daa-d345-4af8-83af-93137e6e1014",
+   "fullUrl": "urn:uuid:8034d582-d9f8-4bc7-8e4f-e4f132d2bf29",
    "resource": {
     "resourceType": "Observation",
     "meta": {
@@ -1185,6 +1354,10 @@
        "display": "Created by StreamKeepers"
       }
      ]
+    },
+    "text": {
+     "status": "generated",
+     "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Foam/colour/smell observed by a citizen volunteer, 2026-09-24.</p></div>"
     },
     "status": "final",
     "category": [
@@ -1208,17 +1381,17 @@
      ]
     },
     "subject": {
-     "reference": "urn:uuid:2ed4fd65-a5c6-4964-9789-04d845b108c3"
+     "reference": "urn:uuid:c053b74f-4f05-4361-a1d5-9d9f3f6be82c"
     },
     "effectiveDateTime": "2026-09-24T10:05:00Z",
     "performer": [
      {
-      "reference": "urn:uuid:32fe1eeb-79e7-4e46-b54c-287993d24ea5"
+      "reference": "urn:uuid:5c1c5f41-4d67-4ab0-9917-c4a8a02bd70d"
      }
     ],
     "derivedFrom": [
      {
-      "reference": "urn:uuid:371b0831-24f6-465e-8c02-b2a260a828b7"
+      "reference": "urn:uuid:65953ed0-005a-47e7-9568-0b1550a7f17f"
      }
     ],
     "component": [
@@ -1290,7 +1463,7 @@
    }
   },
   {
-   "fullUrl": "urn:uuid:124733b7-4bdc-4ff9-b075-b77f0453620e",
+   "fullUrl": "urn:uuid:d7299388-ea95-4d21-8213-c06b5ccd9303",
    "resource": {
     "resourceType": "Observation",
     "meta": {
@@ -1304,6 +1477,10 @@
        "display": "Created by StreamKeepers"
       }
      ]
+    },
+    "text": {
+     "status": "generated",
+     "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Riparian vegetation observed by a citizen volunteer, 2026-09-24.</p></div>"
     },
     "status": "final",
     "category": [
@@ -1327,17 +1504,17 @@
      ]
     },
     "subject": {
-     "reference": "urn:uuid:2ed4fd65-a5c6-4964-9789-04d845b108c3"
+     "reference": "urn:uuid:c053b74f-4f05-4361-a1d5-9d9f3f6be82c"
     },
     "effectiveDateTime": "2026-09-24T10:05:00Z",
     "performer": [
      {
-      "reference": "urn:uuid:32fe1eeb-79e7-4e46-b54c-287993d24ea5"
+      "reference": "urn:uuid:5c1c5f41-4d67-4ab0-9917-c4a8a02bd70d"
      }
     ],
     "derivedFrom": [
      {
-      "reference": "urn:uuid:371b0831-24f6-465e-8c02-b2a260a828b7"
+      "reference": "urn:uuid:65953ed0-005a-47e7-9568-0b1550a7f17f"
      }
     ],
     "component": [
@@ -1475,7 +1652,7 @@
    }
   },
   {
-   "fullUrl": "urn:uuid:3fae5600-ceb9-4e52-8f06-357f5355c480",
+   "fullUrl": "urn:uuid:a9e9d332-93e1-47b7-bcc9-05ef4042e523",
    "resource": {
     "resourceType": "Observation",
     "meta": {
@@ -1489,6 +1666,10 @@
        "display": "Created by StreamKeepers"
       }
      ]
+    },
+    "text": {
+     "status": "generated",
+     "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Land use in the margins observed by a citizen volunteer, 2026-09-24.</p></div>"
     },
     "status": "final",
     "category": [
@@ -1512,17 +1693,17 @@
      ]
     },
     "subject": {
-     "reference": "urn:uuid:2ed4fd65-a5c6-4964-9789-04d845b108c3"
+     "reference": "urn:uuid:c053b74f-4f05-4361-a1d5-9d9f3f6be82c"
     },
     "effectiveDateTime": "2026-09-24T10:05:00Z",
     "performer": [
      {
-      "reference": "urn:uuid:32fe1eeb-79e7-4e46-b54c-287993d24ea5"
+      "reference": "urn:uuid:5c1c5f41-4d67-4ab0-9917-c4a8a02bd70d"
      }
     ],
     "derivedFrom": [
      {
-      "reference": "urn:uuid:371b0831-24f6-465e-8c02-b2a260a828b7"
+      "reference": "urn:uuid:65953ed0-005a-47e7-9568-0b1550a7f17f"
      }
     ],
     "component": [
@@ -1614,7 +1795,7 @@
    }
   },
   {
-   "fullUrl": "urn:uuid:bbe9c836-d5a7-4918-92e5-bbe3e897fa7f",
+   "fullUrl": "urn:uuid:9b59a89f-bbb4-4267-8d66-8ed9ef54670e",
    "resource": {
     "resourceType": "Observation",
     "meta": {
@@ -1628,6 +1809,10 @@
        "display": "Created by StreamKeepers"
       }
      ]
+    },
+    "text": {
+     "status": "generated",
+     "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Citizen overall stream assessment observed by a citizen volunteer, 2026-09-24.</p></div>"
     },
     "status": "final",
     "category": [
@@ -1651,17 +1836,17 @@
      ]
     },
     "subject": {
-     "reference": "urn:uuid:2ed4fd65-a5c6-4964-9789-04d845b108c3"
+     "reference": "urn:uuid:c053b74f-4f05-4361-a1d5-9d9f3f6be82c"
     },
     "effectiveDateTime": "2026-09-24T10:05:00Z",
     "performer": [
      {
-      "reference": "urn:uuid:32fe1eeb-79e7-4e46-b54c-287993d24ea5"
+      "reference": "urn:uuid:5c1c5f41-4d67-4ab0-9917-c4a8a02bd70d"
      }
     ],
     "derivedFrom": [
      {
-      "reference": "urn:uuid:371b0831-24f6-465e-8c02-b2a260a828b7"
+      "reference": "urn:uuid:65953ed0-005a-47e7-9568-0b1550a7f17f"
      }
     ],
     "valueCodeableConcept": {

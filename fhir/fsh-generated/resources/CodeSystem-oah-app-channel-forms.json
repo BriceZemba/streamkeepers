@@ -1,0 +1,27 @@
+{
+  "resourceType": "CodeSystem",
+  "status": "draft",
+  "content": "complete",
+  "name": "OahAppChannelForms",
+  "id": "oah-app-channel-forms",
+  "title": "OneAquaHealth Citizen Science App: Channel form",
+  "description": "Answer codes of the official OneAquaHealth Citizen Science App (https://api.enora-oah.eu/api/citizens/channel_forms), as served by the public OneAquaHealth API.",
+  "version": "0.1.0",
+  "url": "https://api.enora-oah.eu/api/citizens/channel_forms",
+  "concept": [
+    {
+      "code": "FLAT",
+      "display": "Flat"
+    },
+    {
+      "code": "U",
+      "display": "U Shape"
+    },
+    {
+      "code": "V",
+      "display": "V Shape"
+    }
+  ],
+  "caseSensitive": true,
+  "count": 3
+}

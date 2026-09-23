@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { checkBundle, indicatorDrafts, PROFILE_OBS, PROFILE_LOC, OAH_CS } from "./mapping";
+import { checkBundle, indicatorDrafts, PROFILE_OBS, PROFILE_LOC, OAH_CS, NONE_OF_THESE, NOT_SURE } from "./mapping";
 import { refFromLocation, checkStored } from "./client";
 import type { StoredCheck } from "../domain/store";
 import type { SiteFacts } from "../domain/siteFacts";
@@ -26,7 +26,7 @@ describe("FHIR transaction bundle", () => {
     const b = checkBundle(check("ACCEPTED"), site);
     expect(byType(b, "Location")[0].request.ifNoneExist).toBe("identifier=https://api.enora-oah.eu/api/sites|C5");
     expect(byType(b, "Practitioner")[0].request.ifNoneExist).toContain("keeper-1");
-    expect(byType(b, "Questionnaire")[0].request.ifNoneExist).toContain("version=0.1.0");
+    expect(byType(b, "Questionnaire")[0].request.ifNoneExist).toContain("version=0.2.0");
     expect(byType(b, "Location")[0].resource.meta).toMatchObject({ profile: [PROFILE_LOC] });
   });
 
@@ -58,6 +58,18 @@ describe("FHIR transaction bundle", () => {
     const veg = d.find((x) => (x.code as any).coding[0].code === "riparianVegetation")!; // eslint-disable-line @typescript-eslint/no-explicit-any
     expect(veg.components).toHaveLength(3); // left bank only; right bank was "not sure"
     expect(JSON.stringify(veg)).toContain(OAH_CS);
+  });
+
+  it("codes 'none of these' and 'not sure' explicitly, and keeps linkIds unique (FHIR que-2)", () => {
+    const b = checkBundle(check("ACCEPTED"), site);
+    const qr = byType(b, "QuestionnaireResponse")[0].resource as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    const habitats = qr.item.flatMap((g: any) => g.item).find((i: any) => i.linkId === "habitats"); // eslint-disable-line @typescript-eslint/no-explicit-any
+    expect(habitats.answer).toEqual([{ valueCoding: NONE_OF_THESE }]);
+    const construction = qr.item.flatMap((g: any) => g.item).find((i: any) => i.linkId === "construction"); // eslint-disable-line @typescript-eslint/no-explicit-any
+    expect(construction.answer).toEqual([{ valueCoding: NOT_SURE }]);
+    const q = byType(b, "Questionnaire")[0].resource as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    const ids = q.item.flatMap((g: any) => [g.linkId, ...g.item.map((i: any) => i.linkId)]); // eslint-disable-line @typescript-eslint/no-explicit-any
+    expect(new Set(ids).size).toBe(ids.length);
   });
 
   it("labels practice checks as test data", () => {

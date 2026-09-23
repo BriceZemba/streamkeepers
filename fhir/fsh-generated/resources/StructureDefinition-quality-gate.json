@@ -1,0 +1,101 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "quality-gate",
+  "url": "https://github.com/BriceZemba/streamkeepers/fhir/StructureDefinition/quality-gate",
+  "version": "0.1.0",
+  "name": "QualityGate",
+  "title": "StreamKeepers quality gate",
+  "status": "draft",
+  "description": "Outcome of the automatic quality gate and the result of each rule (complete, careful, at the site, consistent, new visit).",
+  "fhirVersion": "4.0.1",
+  "kind": "complex-type",
+  "abstract": false,
+  "context": [
+    {
+      "expression": "QuestionnaireResponse",
+      "type": "element"
+    }
+  ],
+  "type": "Extension",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Extension",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "Extension",
+        "path": "Extension",
+        "short": "StreamKeepers quality gate",
+        "definition": "Outcome of the automatic quality gate and the result of each rule (complete, careful, at the site, consistent, new visit)."
+      },
+      {
+        "id": "Extension.extension",
+        "path": "Extension.extension",
+        "min": 1
+      },
+      {
+        "id": "Extension.extension:outcome",
+        "path": "Extension.extension",
+        "sliceName": "outcome",
+        "short": "accepted | review",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "id": "Extension.extension:outcome.extension",
+        "path": "Extension.extension.extension",
+        "max": "0"
+      },
+      {
+        "id": "Extension.extension:outcome.url",
+        "path": "Extension.extension.url",
+        "fixedUri": "outcome"
+      },
+      {
+        "id": "Extension.extension:outcome.value[x]",
+        "path": "Extension.extension.value[x]",
+        "type": [
+          {
+            "code": "code"
+          }
+        ]
+      },
+      {
+        "id": "Extension.extension:rule",
+        "path": "Extension.extension",
+        "sliceName": "rule",
+        "short": "rule: pass|hold (message)",
+        "min": 0,
+        "max": "*"
+      },
+      {
+        "id": "Extension.extension:rule.extension",
+        "path": "Extension.extension.extension",
+        "max": "0"
+      },
+      {
+        "id": "Extension.extension:rule.url",
+        "path": "Extension.extension.url",
+        "fixedUri": "rule"
+      },
+      {
+        "id": "Extension.extension:rule.value[x]",
+        "path": "Extension.extension.value[x]",
+        "type": [
+          {
+            "code": "string"
+          }
+        ]
+      },
+      {
+        "id": "Extension.url",
+        "path": "Extension.url",
+        "fixedUri": "https://github.com/BriceZemba/streamkeepers/fhir/StructureDefinition/quality-gate"
+      },
+      {
+        "id": "Extension.value[x]",
+        "path": "Extension.value[x]",
+        "max": "0"
+      }
+    ]
+  }
+}

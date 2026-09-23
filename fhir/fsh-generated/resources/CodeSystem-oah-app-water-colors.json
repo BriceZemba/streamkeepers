@@ -1,0 +1,31 @@
+{
+  "resourceType": "CodeSystem",
+  "status": "draft",
+  "content": "complete",
+  "name": "OahAppWaterColors",
+  "id": "oah-app-water-colors",
+  "title": "OneAquaHealth Citizen Science App: Water aspect",
+  "description": "Answer codes of the official OneAquaHealth Citizen Science App (https://api.enora-oah.eu/api/citizens/water_colors), as served by the public OneAquaHealth API.",
+  "version": "0.1.0",
+  "url": "https://api.enora-oah.eu/api/citizens/water_colors",
+  "concept": [
+    {
+      "code": "CL",
+      "display": "Clear/transparent"
+    },
+    {
+      "code": "MU",
+      "display": "Muddy/turbid"
+    },
+    {
+      "code": "FO",
+      "display": "Has foam"
+    },
+    {
+      "code": "CO",
+      "display": "Has colors/altered color"
+    }
+  ],
+  "caseSensitive": true,
+  "count": 4
+}

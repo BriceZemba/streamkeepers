@@ -7,7 +7,7 @@ import { buildSiteFacts } from "../src/domain/siteFacts";
 import { evaluate } from "../src/domain/qualityGate";
 import { applyReview } from "../src/domain/review";
 import type { StoredCheck } from "../src/domain/store";
-import { checkBundle } from "../src/fhir/mapping";
+import { checkBundle, questionnaire } from "../src/fhir/mapping";
 import { reviewBundle } from "../src/fhir/review";
 
 const site = buildSiteFacts().find((s) => s.code === "C5")!;
@@ -35,6 +35,10 @@ async function main() {
     "held-check.json": checkBundle(held, site),
     "reviewed-check.json": reviewBundle(reviewed, site),
   };
+  // The Questionnaire, so the validator can check answers against it.
+  const qdir = join(import.meta.dirname, "..", "fhir", "questionnaire");
+  await mkdir(qdir, { recursive: true });
+  await writeFile(join(qdir, "Questionnaire-stream-check.json"), JSON.stringify({ id: "stream-check", ...questionnaire() }, null, 1) + "\n");
   for (const [name, bundle] of Object.entries(files)) {
     await writeFile(join(dir, name), JSON.stringify(bundle, null, 1) + "\n");
     console.log("wrote", name, (bundle as { entry: unknown[] }).entry.length, "entries");

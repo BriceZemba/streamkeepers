@@ -23,7 +23,7 @@ export const PROFILE_LOC = `${OAH}/StructureDefinition/location-oah`;
 export const SK = "https://github.com/BriceZemba/streamkeepers/fhir";
 export const SK_CS = `${SK}/CodeSystem/streamkeepers`;
 export const SK_QUESTIONNAIRE = `${SK}/Questionnaire/stream-check`;
-export const SK_QUESTIONNAIRE_VERSION = "0.1.0";
+export const SK_QUESTIONNAIRE_VERSION = "0.2.0";
 export const SK_TAG = { system: SK_CS, code: "streamkeepers", display: "Created by StreamKeepers" };
 export const EXT_MISSION_POINTS = `${SK}/StructureDefinition/mission-points`;
 export const EXT_CREDITED_POINTS = `${SK}/StructureDefinition/credited-points`;
@@ -31,6 +31,9 @@ export const EXT_GATE = `${SK}/StructureDefinition/quality-gate`;
 export const SITE_ID_SYSTEM = "https://api.enora-oah.eu/api/sites";
 export const KEEPER_ID_SYSTEM = `${SK}/keeper`;
 const HTEST = { system: "http://terminology.hl7.org/CodeSystem/v3-ActReason", code: "HTEST", display: "test health data" };
+/** Explicit answers, so "nothing seen" and "not sure" are coded data, not missing answers. */
+export const NONE_OF_THESE = { system: SK_CS, code: "none-of-these", display: "None of these" };
+export const NOT_SURE = { system: SK_CS, code: "not-sure", display: "Not sure" };
 
 /** Official OAH Citizen Science App vocabulary for a question, as a code system URI. */
 const OFFICIAL_VOCAB: Record<string, string> = {
@@ -60,6 +63,15 @@ function codes(a: Answers, qid: string): string[] {
   return list.filter((c) => c !== UNSURE);
 }
 
+/** Minimal generated narrative (FHIR dom-6 best practice): a one-line human summary. */
+export const narrative = (summary: string): Json => ({
+  status: "generated",
+  div: `<div xmlns="http://www.w3.org/1999/xhtml"><p>${summary.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p></div>`,
+});
+
+/** Group linkIds are prefixed so they can never clash with a question's linkId (FHIR que-2). */
+export const groupLinkId = (stepId: string) => `step-${stepId}`;
+
 const meta = (practice: boolean, profile?: string): Json => ({
   ...(profile ? { profile: [profile] } : {}),
   tag: [SK_TAG],
@@ -77,8 +89,9 @@ export function questionnaire(): Json {
     experimental: true,
     publisher: "StreamKeepers (OneAquaHealth IEEE Hackathon 2026 prototype)",
     meta: { tag: [SK_TAG] },
+    text: narrative("StreamKeepers stream check: the OneAquaHealth citizen stream assessment in plain language, with the official answer codes."),
     item: STEPS.map((s) => ({
-      linkId: s.id,
+      linkId: groupLinkId(s.id),
       text: s.title,
       type: "group",
       item: s.questions.map((q) => ({
@@ -88,7 +101,11 @@ export function questionnaire(): Json {
         type: "choice",
         repeats: q.kind === "multi",
         required: true,
-        answerOption: q.options.map((o) => ({ valueCoding: coding(q.id, o.code) })),
+        answerOption: [
+          ...q.options.map((o) => ({ valueCoding: coding(q.id, o.code) })),
+          ...(q.kind === "multi" ? [{ valueCoding: NONE_OF_THESE }] : []),
+          ...(q.allowUnsure ? [{ valueCoding: NOT_SURE }] : []),
+        ],
       })),
     })),
   };
@@ -98,6 +115,7 @@ export function location(site: SiteFacts): Json {
   return {
     resourceType: "Location",
     meta: { profile: [PROFILE_LOC], tag: [SK_TAG] },
+    text: narrative(`${site.name} (${site.kind === "research" ? `OneAquaHealth research site ${site.code}, ${site.cityName}` : "citizen-created site"})`),
     identifier: [{ system: SITE_ID_SYSTEM, value: site.code }],
     name: site.name,
     mode: "instance",
@@ -112,6 +130,7 @@ export function practitioner(keeperId: string): Json {
   return {
     resourceType: "Practitioner",
     meta: { tag: [SK_TAG] },
+    text: narrative("Pseudonymous StreamKeepers volunteer (no name or contact details)."),
     identifier: [{ system: KEEPER_ID_SYSTEM, value: keeperId }],
     active: true,
   };
@@ -131,6 +150,7 @@ export function questionnaireResponse(check: StoredCheck, locRef: string, keeper
   return {
     resourceType: "QuestionnaireResponse",
     meta: meta(check.practice),
+    text: narrative(`Citizen stream check (${check.gate.outcome === "ACCEPTED" ? "passed the quality gate" : "held for review"}), ${check.submittedAt.slice(0, 10)}.`),
     identifier: { system: `${SK}/check`, value: check.id },
     questionnaire: `${SK_QUESTIONNAIRE}|${SK_QUESTIONNAIRE_VERSION}`,
     status: "completed",
@@ -143,7 +163,7 @@ export function questionnaireResponse(check: StoredCheck, locRef: string, keeper
       gateExtension(check),
     ],
     item: STEPS.filter((s) => s.questions.some((q) => check.answers[q.id] !== undefined)).map((s) => ({
-      linkId: s.id,
+      linkId: groupLinkId(s.id),
       item: s.questions
         .filter((q) => check.answers[q.id] !== undefined)
         .map((q) => {
@@ -152,8 +172,9 @@ export function questionnaireResponse(check: StoredCheck, locRef: string, keeper
           return {
             linkId: q.id,
             text: q.title,
-            // An empty multi-select ("none of these") is recorded as an item with no answer.
-            answer: list.map((c) => (c === UNSURE ? { valueString: "not sure" } : { valueCoding: coding(q.id, c) })),
+            answer: list.length
+              ? list.map((c) => ({ valueCoding: c === UNSURE ? NOT_SURE : coding(q.id, c) }))
+              : [{ valueCoding: NONE_OF_THESE }], // empty multi-select = "none of these"
           };
         }),
     })),
@@ -219,6 +240,7 @@ export function observations(check: StoredCheck, locRef: string, keeperRef: stri
   return indicatorDrafts(check.answers).map((d) => ({
     resourceType: "Observation",
     meta: meta(check.practice, PROFILE_OBS),
+    text: narrative(`${((d.code as { coding: { display: string }[] }).coding[0].display)} observed by a citizen volunteer, ${check.submittedAt.slice(0, 10)}.`),
     status: "final",
     category: [{ coding: [{ system: "http://terminology.hl7.org/CodeSystem/observation-category", code: "survey", display: "Survey" }] }],
     code: d.code,

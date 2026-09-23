@@ -1,0 +1,27 @@
+{
+  "resourceType": "CodeSystem",
+  "status": "draft",
+  "content": "complete",
+  "name": "OahAppBankTypes",
+  "id": "oah-app-bank-types",
+  "title": "OneAquaHealth Citizen Science App: Bank type",
+  "description": "Answer codes of the official OneAquaHealth Citizen Science App (https://api.enora-oah.eu/api/citizens/bank_types), as served by the public OneAquaHealth API.",
+  "version": "0.1.0",
+  "url": "https://api.enora-oah.eu/api/citizens/bank_types",
+  "concept": [
+    {
+      "code": "NAT",
+      "display": "Natural"
+    },
+    {
+      "code": "ART",
+      "display": "Artificial (concrete or stones with concrete)"
+    },
+    {
+      "code": "LAS",
+      "display": "Layed stones with no concrete"
+    }
+  ],
+  "caseSensitive": true,
+  "count": 3
+}

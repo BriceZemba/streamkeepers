@@ -1,0 +1,697 @@
+{
+ "id": "stream-check",
+ "resourceType": "Questionnaire",
+ "url": "https://github.com/BriceZemba/streamkeepers/fhir/Questionnaire/stream-check",
+ "version": "0.2.0",
+ "name": "StreamKeepersStreamCheck",
+ "title": "StreamKeepers stream check (OneAquaHealth citizen protocol, plain language)",
+ "status": "draft",
+ "experimental": true,
+ "publisher": "StreamKeepers (OneAquaHealth IEEE Hackathon 2026 prototype)",
+ "meta": {
+  "tag": [
+   {
+    "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+    "code": "streamkeepers",
+    "display": "Created by StreamKeepers"
+   }
+  ]
+ },
+ "text": {
+  "status": "generated",
+  "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>StreamKeepers stream check: the OneAquaHealth citizen stream assessment in plain language, with the official answer codes.</p></div>"
+ },
+ "item": [
+  {
+   "linkId": "step-water",
+   "text": "The water",
+   "type": "group",
+   "item": [
+    {
+     "linkId": "water_flow",
+     "text": "How is the water moving?",
+     "prefix": "Water flow",
+     "type": "choice",
+     "repeats": false,
+     "required": true,
+     "answerOption": [
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/water_flows",
+        "code": "FAS",
+        "display": "Fast (with waves or high velocity)"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/water_flows",
+        "code": "NOR",
+        "display": "Slow"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/water_flows",
+        "code": "STA",
+        "display": "Stagnant/intermittent"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/water_flows",
+        "code": "DRY",
+        "display": "Dry"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "linkId": "step-colour",
+   "text": "What the water looks like",
+   "type": "group",
+   "item": [
+    {
+     "linkId": "water_color",
+     "text": "What does the water look like?",
+     "prefix": "Water aspect",
+     "type": "choice",
+     "repeats": true,
+     "required": true,
+     "answerOption": [
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/water_colors",
+        "code": "CL",
+        "display": "Clear/transparent"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/water_colors",
+        "code": "MU",
+        "display": "Muddy/turbid"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/water_colors",
+        "code": "FO",
+        "display": "Has foam"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/water_colors",
+        "code": "CO",
+        "display": "Has colors/altered color"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "none-of-these",
+        "display": "None of these"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "not-sure",
+        "display": "Not sure"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "linkId": "step-channel",
+   "text": "The stream bed",
+   "type": "group",
+   "item": [
+    {
+     "linkId": "channel_type",
+     "text": "What is the stream bed made of?",
+     "prefix": "Channel type",
+     "type": "choice",
+     "repeats": false,
+     "required": true,
+     "answerOption": [
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/channel_types",
+        "code": "NAT",
+        "display": "Natural"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/channel_types",
+        "code": "ART",
+        "display": "Artificial (concrete or stones with concrete)"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "not-sure",
+        "display": "Not sure"
+       }
+      }
+     ]
+    },
+    {
+     "linkId": "channel_form",
+     "text": "What shape is the stream bed?",
+     "prefix": "Channel form",
+     "type": "choice",
+     "repeats": false,
+     "required": true,
+     "answerOption": [
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/channel_forms",
+        "code": "FLAT",
+        "display": "Flat"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/channel_forms",
+        "code": "U",
+        "display": "U Shape"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/channel_forms",
+        "code": "V",
+        "display": "V Shape"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "not-sure",
+        "display": "Not sure"
+       }
+      }
+     ]
+    },
+    {
+     "linkId": "bank_type",
+     "text": "What are the banks made of?",
+     "prefix": "Bank type",
+     "type": "choice",
+     "repeats": false,
+     "required": true,
+     "answerOption": [
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/bank_types",
+        "code": "NAT",
+        "display": "Natural"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/bank_types",
+        "code": "ART",
+        "display": "Artificial (concrete or stones with concrete)"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/bank_types",
+        "code": "LAS",
+        "display": "Layed stones with no concrete"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "not-sure",
+        "display": "Not sure"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "linkId": "step-life",
+   "text": "Places for life",
+   "type": "group",
+   "item": [
+    {
+     "linkId": "habitats",
+     "text": "Which of these can you see in the water?",
+     "prefix": "Habitats",
+     "type": "choice",
+     "repeats": true,
+     "required": true,
+     "answerOption": [
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/habitats",
+        "code": "SB",
+        "display": "Sand banks"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/habitats",
+        "code": "SI",
+        "display": "Sand islands"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/habitats",
+        "code": "RF",
+        "display": "Riffles, rapids, falls"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/habitats",
+        "code": "AV",
+        "display": "Aquatic vegetation"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/habitats",
+        "code": "SD",
+        "display": "Stone deposits"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "none-of-these",
+        "display": "None of these"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "not-sure",
+        "display": "Not sure"
+       }
+      }
+     ]
+    },
+    {
+     "linkId": "fallen_biomass",
+     "text": "Is there wood or leaves in the stream?",
+     "prefix": "Natural debris (fallen biomass)",
+     "type": "choice",
+     "repeats": true,
+     "required": true,
+     "answerOption": [
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/fallen_biomass",
+        "code": "FT",
+        "display": "Fallen trees"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/fallen_biomass",
+        "code": "FB",
+        "display": "Fallen branches"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/fallen_biomass",
+        "code": "FL",
+        "display": "Deposits of fallen leaves"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "none-of-these",
+        "display": "None of these"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "not-sure",
+        "display": "Not sure"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "linkId": "step-pressures",
+   "text": "Signs of pressure",
+   "type": "group",
+   "item": [
+    {
+     "linkId": "draining_pipes",
+     "text": "Do pipes flow into the stream?",
+     "prefix": "Draining pipes",
+     "type": "choice",
+     "repeats": false,
+     "required": true,
+     "answerOption": [
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-draining-pipes",
+        "code": "NO",
+        "display": "No pipes"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-draining-pipes",
+        "code": "DRY_PIPE",
+        "display": "Pipes, but nothing coming out"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-draining-pipes",
+        "code": "FLOWING",
+        "display": "Pipes with water coming out"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "not-sure",
+        "display": "Not sure"
+       }
+      }
+     ]
+    },
+    {
+     "linkId": "sewage_signs",
+     "text": "Any sewage smell, grey water or toilet paper?",
+     "prefix": "Signs of sewage (StreamKeepers addition)",
+     "type": "choice",
+     "repeats": false,
+     "required": true,
+     "answerOption": [
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-sewage-signs",
+        "code": "YES",
+        "display": "Yes"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-sewage-signs",
+        "code": "NO",
+        "display": "No"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "not-sure",
+        "display": "Not sure"
+       }
+      }
+     ]
+    },
+    {
+     "linkId": "barriers",
+     "text": "Is something blocking the flow?",
+     "prefix": "Barriers",
+     "type": "choice",
+     "repeats": false,
+     "required": true,
+     "answerOption": [
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-barriers",
+        "code": "YES",
+        "display": "Yes"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-barriers",
+        "code": "NO",
+        "display": "No"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "not-sure",
+        "display": "Not sure"
+       }
+      }
+     ]
+    },
+    {
+     "linkId": "construction",
+     "text": "Are there works in or next to the stream?",
+     "prefix": "Construction",
+     "type": "choice",
+     "repeats": false,
+     "required": true,
+     "answerOption": [
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-construction",
+        "code": "YES",
+        "display": "Yes"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-construction",
+        "code": "NO",
+        "display": "No"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "not-sure",
+        "display": "Not sure"
+       }
+      }
+     ]
+    },
+    {
+     "linkId": "invasive_species",
+     "text": "Did you see plants or animals that don't belong here?",
+     "prefix": "Invasive species",
+     "type": "choice",
+     "repeats": false,
+     "required": true,
+     "answerOption": [
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-invasive-species",
+        "code": "YES",
+        "display": "Yes"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-invasive-species",
+        "code": "NO",
+        "display": "No"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "not-sure",
+        "display": "Not sure"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "linkId": "step-banks",
+   "text": "The banks",
+   "type": "group",
+   "item": [
+    {
+     "linkId": "vegetation_left",
+     "text": "Plants on the left bank (looking downstream)",
+     "prefix": "Vegetation, left margin",
+     "type": "choice",
+     "repeats": true,
+     "required": true,
+     "answerOption": [
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/vegetation_types",
+        "code": "H",
+        "display": "Herbs"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/vegetation_types",
+        "code": "B",
+        "display": "Shrubs"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/vegetation_types",
+        "code": "T",
+        "display": "Trees"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "none-of-these",
+        "display": "None of these"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "not-sure",
+        "display": "Not sure"
+       }
+      }
+     ]
+    },
+    {
+     "linkId": "vegetation_right",
+     "text": "Plants on the right bank",
+     "prefix": "Vegetation, right margin",
+     "type": "choice",
+     "repeats": true,
+     "required": true,
+     "answerOption": [
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/vegetation_types",
+        "code": "H",
+        "display": "Herbs"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/vegetation_types",
+        "code": "B",
+        "display": "Shrubs"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/vegetation_types",
+        "code": "T",
+        "display": "Trees"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "none-of-these",
+        "display": "None of these"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "not-sure",
+        "display": "Not sure"
+       }
+      }
+     ]
+    },
+    {
+     "linkId": "impervious",
+     "text": "How much of the banks is paved or built on?",
+     "prefix": "Impervious areas",
+     "type": "choice",
+     "repeats": false,
+     "required": true,
+     "answerOption": [
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-impervious",
+        "code": "NONE",
+        "display": "None"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-impervious",
+        "code": "SOME",
+        "display": "Some"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-impervious",
+        "code": "MOST",
+        "display": "Most"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers",
+        "code": "not-sure",
+        "display": "Not sure"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "linkId": "step-overall",
+   "text": "Your overall view",
+   "type": "group",
+   "item": [
+    {
+     "linkId": "overall",
+     "text": "Overall, how healthy does this stream look?",
+     "prefix": "Overall stream assessment",
+     "type": "choice",
+     "repeats": false,
+     "required": true,
+     "answerOption": [
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/stream_assessments",
+        "code": "GOOD",
+        "display": "Good quality"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/stream_assessments",
+        "code": "MODERATE",
+        "display": "Moderate quality"
+       }
+      },
+      {
+       "valueCoding": {
+        "system": "https://api.enora-oah.eu/api/citizens/stream_assessments",
+        "code": "POOR",
+        "display": "Poor quality"
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

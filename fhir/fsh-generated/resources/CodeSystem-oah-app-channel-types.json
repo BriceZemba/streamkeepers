@@ -1,0 +1,23 @@
+{
+  "resourceType": "CodeSystem",
+  "status": "draft",
+  "content": "complete",
+  "name": "OahAppChannelTypes",
+  "id": "oah-app-channel-types",
+  "title": "OneAquaHealth Citizen Science App: Channel type",
+  "description": "Answer codes of the official OneAquaHealth Citizen Science App (https://api.enora-oah.eu/api/citizens/channel_types), as served by the public OneAquaHealth API.",
+  "version": "0.1.0",
+  "url": "https://api.enora-oah.eu/api/citizens/channel_types",
+  "concept": [
+    {
+      "code": "NAT",
+      "display": "Natural"
+    },
+    {
+      "code": "ART",
+      "display": "Artificial (concrete or stones with concrete)"
+    }
+  ],
+  "caseSensitive": true,
+  "count": 2
+}

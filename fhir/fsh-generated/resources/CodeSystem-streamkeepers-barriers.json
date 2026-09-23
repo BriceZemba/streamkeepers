@@ -1,0 +1,23 @@
+{
+  "resourceType": "CodeSystem",
+  "status": "draft",
+  "content": "complete",
+  "name": "StreamkeepersBarriers",
+  "id": "streamkeepers-barriers",
+  "title": "StreamKeepers: Barriers",
+  "description": "Answer codes for a StreamKeepers question: Is something blocking the flow?",
+  "version": "0.1.0",
+  "url": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-barriers",
+  "concept": [
+    {
+      "code": "YES",
+      "display": "Yes"
+    },
+    {
+      "code": "NO",
+      "display": "No"
+    }
+  ],
+  "caseSensitive": true,
+  "count": 2
+}

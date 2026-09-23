@@ -1,0 +1,27 @@
+{
+  "resourceType": "CodeSystem",
+  "status": "draft",
+  "content": "complete",
+  "name": "StreamkeepersImpervious",
+  "id": "streamkeepers-impervious",
+  "title": "StreamKeepers: Impervious areas",
+  "description": "Answer codes for a StreamKeepers question: How much of the banks is paved or built on?",
+  "version": "0.1.0",
+  "url": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-impervious",
+  "concept": [
+    {
+      "code": "NONE",
+      "display": "None"
+    },
+    {
+      "code": "SOME",
+      "display": "Some"
+    },
+    {
+      "code": "MOST",
+      "display": "Most"
+    }
+  ],
+  "caseSensitive": true,
+  "count": 3
+}

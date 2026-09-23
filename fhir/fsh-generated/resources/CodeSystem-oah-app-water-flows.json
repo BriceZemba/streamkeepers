@@ -1,0 +1,31 @@
+{
+  "resourceType": "CodeSystem",
+  "status": "draft",
+  "content": "complete",
+  "name": "OahAppWaterFlows",
+  "id": "oah-app-water-flows",
+  "title": "OneAquaHealth Citizen Science App: Water flow",
+  "description": "Answer codes of the official OneAquaHealth Citizen Science App (https://api.enora-oah.eu/api/citizens/water_flows), as served by the public OneAquaHealth API.",
+  "version": "0.1.0",
+  "url": "https://api.enora-oah.eu/api/citizens/water_flows",
+  "concept": [
+    {
+      "code": "FAS",
+      "display": "Fast (with waves or high velocity)"
+    },
+    {
+      "code": "NOR",
+      "display": "Slow"
+    },
+    {
+      "code": "STA",
+      "display": "Stagnant/intermittent"
+    },
+    {
+      "code": "DRY",
+      "display": "Dry"
+    }
+  ],
+  "caseSensitive": true,
+  "count": 4
+}

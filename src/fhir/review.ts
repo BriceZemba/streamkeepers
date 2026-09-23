@@ -6,7 +6,7 @@
 // If the check never reached the server, the whole check is sent with it.
 import type { SiteFacts } from "../domain/siteFacts";
 import type { StoredCheck } from "../domain/store";
-import { checkBundle, observations, SK_TAG, type BundleEntry, type TransactionBundle } from "./mapping";
+import { checkBundle, narrative, observations, SK_TAG, type BundleEntry, type TransactionBundle } from "./mapping";
 
 const HTEST = { system: "http://terminology.hl7.org/CodeSystem/v3-ActReason", code: "HTEST", display: "test health data" };
 
@@ -16,12 +16,17 @@ function provenance(check: StoredCheck, targets: string[], qrRef: string): Recor
   return {
     resourceType: "Provenance",
     meta: { tag: [SK_TAG], ...(check.practice ? { security: [HTEST] } : {}) },
+    text: narrative(`${accepted ? "Accepted" : "Rejected"} by ${r.reviewer} on ${r.at.slice(0, 10)}${accepted ? "" : `: ${r.reason}`}.`),
     target: targets.map((reference) => ({ reference })),
     recorded: r.at,
     activity: accepted
       ? { coding: [{ system: "http://terminology.hl7.org/CodeSystem/v3-DataOperation", code: "CREATE", display: "create" }], text: "Reviewer accepted a citizen check held by the quality gate" }
       : { text: "Reviewer rejected a citizen check held by the quality gate" },
-    reason: [{ text: accepted ? "Confirmed by reviewer" : `Rejected: ${r.reason}${r.note ? ` (${r.note})` : ""}` }],
+    // Purpose of the review: public health (v3-PurposeOfUse), with the decision in text.
+    reason: [{
+      coding: [{ system: "http://terminology.hl7.org/CodeSystem/v3-ActReason", code: "PUBHLTH", display: "public health" }],
+      text: accepted ? "Confirmed by reviewer" : `Rejected: ${r.reason}${r.note ? ` (${r.note})` : ""}`,
+    }],
     agent: [
       {
         type: { coding: [{ system: "http://terminology.hl7.org/CodeSystem/provenance-participant-type", code: "verifier", display: "Verifier" }] },

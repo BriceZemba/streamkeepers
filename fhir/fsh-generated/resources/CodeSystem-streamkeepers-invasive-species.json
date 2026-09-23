@@ -1,0 +1,23 @@
+{
+  "resourceType": "CodeSystem",
+  "status": "draft",
+  "content": "complete",
+  "name": "StreamkeepersInvasiveSpecies",
+  "id": "streamkeepers-invasive-species",
+  "title": "StreamKeepers: Invasive species",
+  "description": "Answer codes for a StreamKeepers question: Did you see plants or animals that don't belong here?",
+  "version": "0.1.0",
+  "url": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-invasive-species",
+  "concept": [
+    {
+      "code": "YES",
+      "display": "Yes"
+    },
+    {
+      "code": "NO",
+      "display": "No"
+    }
+  ],
+  "caseSensitive": true,
+  "count": 2
+}

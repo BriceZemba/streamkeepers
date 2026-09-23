@@ -1,0 +1,23 @@
+{
+  "resourceType": "CodeSystem",
+  "status": "draft",
+  "content": "complete",
+  "name": "StreamkeepersConstruction",
+  "id": "streamkeepers-construction",
+  "title": "StreamKeepers: Construction",
+  "description": "Answer codes for a StreamKeepers question: Are there works in or next to the stream?",
+  "version": "0.1.0",
+  "url": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-construction",
+  "concept": [
+    {
+      "code": "YES",
+      "display": "Yes"
+    },
+    {
+      "code": "NO",
+      "display": "No"
+    }
+  ],
+  "caseSensitive": true,
+  "count": 2
+}

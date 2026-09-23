@@ -1,0 +1,27 @@
+{
+  "resourceType": "CodeSystem",
+  "status": "draft",
+  "content": "complete",
+  "name": "OahAppStreamAssessments",
+  "id": "oah-app-stream-assessments",
+  "title": "OneAquaHealth Citizen Science App: Overall stream assessment",
+  "description": "Answer codes of the official OneAquaHealth Citizen Science App (https://api.enora-oah.eu/api/citizens/stream_assessments), as served by the public OneAquaHealth API.",
+  "version": "0.1.0",
+  "url": "https://api.enora-oah.eu/api/citizens/stream_assessments",
+  "concept": [
+    {
+      "code": "GOOD",
+      "display": "Good quality"
+    },
+    {
+      "code": "MODERATE",
+      "display": "Moderate quality"
+    },
+    {
+      "code": "POOR",
+      "display": "Poor quality"
+    }
+  ],
+  "caseSensitive": true,
+  "count": 3
+}

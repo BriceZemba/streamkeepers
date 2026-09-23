@@ -1,0 +1,27 @@
+{
+  "resourceType": "CodeSystem",
+  "status": "draft",
+  "content": "complete",
+  "name": "StreamkeepersDrainingPipes",
+  "id": "streamkeepers-draining-pipes",
+  "title": "StreamKeepers: Draining pipes",
+  "description": "Answer codes for a StreamKeepers question: Do pipes flow into the stream?",
+  "version": "0.1.0",
+  "url": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-draining-pipes",
+  "concept": [
+    {
+      "code": "NO",
+      "display": "No pipes"
+    },
+    {
+      "code": "DRY_PIPE",
+      "display": "Pipes, but nothing coming out"
+    },
+    {
+      "code": "FLOWING",
+      "display": "Pipes with water coming out"
+    }
+  ],
+  "caseSensitive": true,
+  "count": 3
+}

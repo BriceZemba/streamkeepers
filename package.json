@@ -14,7 +14,9 @@
     "fhir:smoke": "tsx scripts/fhir-smoke.ts",
     "simulate": "tsx scripts/simulate.ts",
     "screenshots": "tsx scripts/screenshots.ts",
-    "fhir:examples": "tsx scripts/fhir-examples.ts"
+    "fhir:examples": "tsx scripts/fhir-examples.ts",
+    "fhir:vocab": "tsx scripts/fhir-vocab.ts",
+    "fhir:validate": "tsx scripts/fhir-validate.ts"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",

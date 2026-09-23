@@ -1,0 +1,27 @@
+{
+  "resourceType": "CodeSystem",
+  "status": "draft",
+  "content": "complete",
+  "name": "OahAppFallenBiomass",
+  "id": "oah-app-fallen-biomass",
+  "title": "OneAquaHealth Citizen Science App: Natural debris (fallen biomass)",
+  "description": "Answer codes of the official OneAquaHealth Citizen Science App (https://api.enora-oah.eu/api/citizens/fallen_biomass), as served by the public OneAquaHealth API.",
+  "version": "0.1.0",
+  "url": "https://api.enora-oah.eu/api/citizens/fallen_biomass",
+  "concept": [
+    {
+      "code": "FT",
+      "display": "Fallen trees"
+    },
+    {
+      "code": "FB",
+      "display": "Fallen branches"
+    },
+    {
+      "code": "FL",
+      "display": "Deposits of fallen leaves"
+    }
+  ],
+  "caseSensitive": true,
+  "count": 3
+}

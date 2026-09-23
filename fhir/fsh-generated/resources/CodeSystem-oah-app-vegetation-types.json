@@ -1,0 +1,27 @@
+{
+  "resourceType": "CodeSystem",
+  "status": "draft",
+  "content": "complete",
+  "name": "OahAppVegetationTypes",
+  "id": "oah-app-vegetation-types",
+  "title": "OneAquaHealth Citizen Science App: Vegetation, left margin",
+  "description": "Answer codes of the official OneAquaHealth Citizen Science App (https://api.enora-oah.eu/api/citizens/vegetation_types), as served by the public OneAquaHealth API.",
+  "version": "0.1.0",
+  "url": "https://api.enora-oah.eu/api/citizens/vegetation_types",
+  "concept": [
+    {
+      "code": "H",
+      "display": "Herbs"
+    },
+    {
+      "code": "B",
+      "display": "Shrubs"
+    },
+    {
+      "code": "T",
+      "display": "Trees"
+    }
+  ],
+  "caseSensitive": true,
+  "count": 3
+}

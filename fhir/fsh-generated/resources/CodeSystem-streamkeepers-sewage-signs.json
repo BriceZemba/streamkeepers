@@ -1,0 +1,23 @@
+{
+  "resourceType": "CodeSystem",
+  "status": "draft",
+  "content": "complete",
+  "name": "StreamkeepersSewageSigns",
+  "id": "streamkeepers-sewage-signs",
+  "title": "StreamKeepers: Signs of sewage (StreamKeepers addition)",
+  "description": "Answer codes for a StreamKeepers question: Any sewage smell, grey water or toilet paper?",
+  "version": "0.1.0",
+  "url": "https://github.com/BriceZemba/streamkeepers/fhir/CodeSystem/streamkeepers-sewage-signs",
+  "concept": [
+    {
+      "code": "YES",
+      "display": "Yes"
+    },
+    {
+      "code": "NO",
+      "display": "No"
+    }
+  ],
+  "caseSensitive": true,
+  "count": 2
+}
