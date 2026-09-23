@@ -150,6 +150,13 @@ export const fr: Record<string, string> = {
   "journal.remindHint": "Ajoute un événement à l'agenda de votre téléphone à chaque saison, avec un lien vers ce cours d'eau. Sans compte ni autorisation de notifications.",
   "journal.community": "Trouvez ou créez le groupe de ce cours d'eau sur la Communauté OneAquaHealth",
 
+  "map.view": "Vue de la carte",
+  "map.plan": "Plan",
+  "map.satellite": "Satellite",
+  "map.loading3d": "Chargement du relief 3D…",
+  "map.no3d": "3D indisponible sur cet appareil",
+  "detail.streetView": "Street View",
+
   "season.winter": "Hiver",
   "season.spring": "Printemps",
   "season.summer": "Été",

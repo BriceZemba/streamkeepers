@@ -150,6 +150,13 @@ export const pt: Record<string, string> = {
   "journal.remindHint": "Adiciona um evento ao calendário do telemóvel em cada estação, com ligação para esta ribeira. Sem conta nem permissão de notificações.",
   "journal.community": "Encontre ou crie o grupo desta ribeira na Comunidade OneAquaHealth",
 
+  "map.view": "Vista do mapa",
+  "map.plan": "Mapa",
+  "map.satellite": "Satélite",
+  "map.loading3d": "A carregar o relevo 3D…",
+  "map.no3d": "3D não disponível neste dispositivo",
+  "detail.streetView": "Street View",
+
   "season.winter": "Inverno",
   "season.spring": "Primavera",
   "season.summer": "Verão",

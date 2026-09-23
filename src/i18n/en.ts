@@ -151,6 +151,13 @@ export const en: Record<string, string> = {
   "journal.remindHint": "Adds an event to your phone's calendar each season, with a link back to this stream. No account or notification permission needed.",
   "journal.community": "Find or start this stream's group on the OneAquaHealth Community",
 
+  "map.view": "Map view",
+  "map.plan": "Map",
+  "map.satellite": "Satellite",
+  "map.loading3d": "Loading 3D terrain…",
+  "map.no3d": "3D isn't available on this device",
+  "detail.streetView": "Street View",
+
   "season.winter": "Winter",
   "season.spring": "Spring",
   "season.summer": "Summer",

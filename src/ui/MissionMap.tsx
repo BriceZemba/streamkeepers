@@ -48,17 +48,37 @@ const icon = (m: Mission, selected: boolean) =>
     iconAnchor: [16, 32],
   });
 
-export function MissionMap({ missions, selected, onSelect, label }: { missions: Mission[]; selected: Mission | null; onSelect: (code: string) => void; label: string }) {
+export type FlatView = "plan" | "satellite";
+
+export function MissionMap({ missions, selected, onSelect, label, view = "plan" }: { missions: Mission[]; selected: Mission | null; onSelect: (code: string) => void; label: string; view?: FlatView }) {
   // Draw higher-value pins on top.
   const ordered = useMemo(() => [...missions].sort((a, b) => a.value.points - b.value.points), [missions]);
   return (
-    <div className="map" role="region" aria-label={label}>
+    <div className={`map${view === "satellite" ? " is-satellite" : ""}`} role="region" aria-label={label}>
       <MapContainer center={[40.2, -8.42]} zoom={12} scrollWheelZoom={false} zoomControl style={{ height: "100%", width: "100%" }}>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-          maxZoom={19}
-        />
+        {view === "plan" ? (
+          <TileLayer
+            key="plan"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+            maxZoom={19}
+          />
+        ) : (
+          <>
+            <TileLayer
+              key="sat"
+              attribution="Imagery &copy; Esri, Maxar, Earthstar Geographics"
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+              maxZoom={19}
+            />
+            <TileLayer
+              key="sat-labels"
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+              maxZoom={19}
+              opacity={0.85}
+            />
+          </>
+        )}
         <KeepSized />
         <FitTo missions={missions} />
         <FlyToSelected mission={selected} />

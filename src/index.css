@@ -333,6 +333,17 @@ main { flex: 1; display: flex; flex-direction: column; }
 
 .adopted-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--moss); background: var(--moss-soft); padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
 .detail-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 18px; }
+.span-2 { grid-column: 1 / -1; }
+.view-switch { position: absolute; top: 12px; right: 12px; z-index: 1000; display: flex; padding: 3px; border-radius: 999px; background: color-mix(in srgb, var(--card) 92%, transparent); box-shadow: var(--shadow); backdrop-filter: blur(6px); }
+.view-switch button { border: 0; background: transparent; min-height: 34px; padding: 0 12px; border-radius: 999px; font-weight: 700; font-size: 0.78rem; color: var(--ink-2); cursor: pointer; }
+.view-switch button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.view-switch button:disabled { opacity: 0.4; cursor: not-allowed; }
+.map.is-satellite .leaflet-tile-pane, :root[data-theme="dark"] .map.is-satellite .leaflet-tile-pane { filter: none; }
+.map-loading { display: grid; place-items: center; background: var(--paper-2); color: var(--ink-2); font-weight: 600; font-size: 0.9rem; }
+.map.map-3d { position: absolute; inset: 0; }
+.map-3d .maplibregl-ctrl-group { background: var(--card); border-radius: 10px; box-shadow: var(--shadow); }
+.map-3d .maplibregl-ctrl-top-left { margin: 12px; }
+.pin-3d { border: 0; background: transparent; padding: 0; cursor: pointer; }
 .toast { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%); z-index: 1300; margin: 0; padding: 10px 16px; border-radius: 999px; background: var(--ink); color: var(--paper); font-weight: 650; font-size: 0.88rem; box-shadow: var(--shadow); animation: rise 0.2s ease both; }
 .btn-soft { border: 1.5px solid var(--line); background: var(--card); color: var(--ink); min-height: 46px; font-size: 0.9rem; }
 .btn-soft[aria-pressed="true"] { border-color: var(--moss); background: var(--moss-soft); color: var(--moss); }

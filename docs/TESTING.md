@@ -25,6 +25,9 @@ Things to try:
 - Close a check halfway, reopen the app: a **Resume** banner offers to continue where you stopped.
 - Go offline (DevTools → Network → Offline): a banner appears; checks stay on the phone and are sent when the connection returns.
 
+- Map views (top right of the map): **Plan**, **Satellite** and **3D** relief. Mission page: **Street View** opens Google Street View at the site.
+  3D uses MapLibre 6, whose worker only loads in a production build. To try 3D locally run `npm run build && npm run preview` (the dev server shows an empty 3D map).
+
 Automated checks:
 
 ```bash
