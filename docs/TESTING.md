@@ -16,7 +16,12 @@ Things to try:
 - Do a check in under 90 s: it is held for review, not deleted.
 - Do a careful check (≥ 90 s) in practice mode: points are credited.
 - Rate a stream **Good** but report sewage: the consistency rule asks a reviewer to look.
-- **Me** tab: history, points, settings (practice mode, simulated activity), reset.
+- **Journal** tab: history, points, adopted stream and season streak, settings (practice mode, simulated activity, FHIR server), reset.
+- Header: **language toggle** (EN → PT → FR, also `?lang=pt`) and **light/dark toggle** (starts from the phone's setting).
+- **Search** a site (accent-insensitive: "estacao" finds "Estação Cbr-B") and sort by **Nearest** (needs location permission).
+- Mission page: **Directions** (opens the phone's map app) and **Adopt this stream** (+15 pts for its seasonal check, season streak in the Journal).
+- Close a check halfway, reopen the app: a **Resume** banner offers to continue where you stopped.
+- Go offline (DevTools → Network → Offline): a banner appears; checks stay on the phone and are sent when the connection returns.
 
 Automated checks:
 

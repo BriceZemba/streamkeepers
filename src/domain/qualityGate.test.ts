@@ -44,7 +44,7 @@ describe("quality gate", () => {
   });
 
   it("questions 'Poor' symmetrically when everything reported is natural and clear", () => {
-    expect(contradictions({ ...cleanStream, overall: "POOR" })).toHaveLength(1);
+    expect(contradictions({ ...cleanStream, overall: "POOR" }).map((c) => c.key)).toEqual(["gate.c.poorNatural"]);
   });
 
   it("holds reports made far from the site, but not in practice mode", () => {

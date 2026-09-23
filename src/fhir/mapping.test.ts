@@ -16,7 +16,7 @@ const answers: Answers = {
 const check = (outcome: "ACCEPTED" | "REVIEW", practice = false): StoredCheck => ({
   id: "chk-1", siteCode: "C5", keeperId: "keeper-1", startedAt: "2026-09-24T10:00:00Z", submittedAt: "2026-09-24T10:04:00Z",
   answers, distanceM: 30, practice, missionPoints: 117, creditedPoints: outcome === "ACCEPTED" ? 117 : 0,
-  gate: { outcome, noNewPoints: false, results: [{ rule: "careful", passed: outcome === "ACCEPTED", message: "Took 240 s." }] },
+  gate: { outcome, noNewPoints: false, results: [{ rule: "careful", passed: outcome === "ACCEPTED", message: "Took 240 s.", msgs: [] }] },
 });
 
 const byType = (b: ReturnType<typeof checkBundle>, t: string) => b.entry.filter((e) => e.resource.resourceType === t);

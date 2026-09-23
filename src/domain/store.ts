@@ -1,7 +1,7 @@
 // Local store for this device's checks, plus the clearly labelled demo seed of
 // community activity. Friday's build moves the system of record to the
 // OneAquaHealth FHIR server; this module stays as the offline queue.
-import { seasonKey } from "./missionValue";
+import { seasonKey, seasonOrdinal } from "./missionValue";
 import type { CheckSubmission, GateResult } from "./qualityGate";
 import type { SyncResult } from "../fhir/client";
 
@@ -72,6 +72,8 @@ export function clearChecks() {
 export interface Keeper {
   id: string;
   name: string;
+  /** Site code of the stream this volunteer adopted, if any. */
+  adopted?: string | null;
 }
 
 export function loadKeeper(): Keeper {
@@ -97,4 +99,56 @@ export function checksThisSeason(checks: StoredCheck[], now: Date, includeSimula
     counts.set(c.siteCode, (counts.get(c.siteCode) ?? 0) + 1);
   }
   return counts;
+}
+
+export interface Streak {
+  /** Seasons in a row (ending this season, or last season if this one is still open) with an accepted check at the adopted stream. */
+  count: number;
+  /** The last four seasons, oldest first: ordinal and whether it has a check. */
+  recent: { ordinal: number; done: boolean }[];
+  /** True when the adopted stream still needs its check this season. */
+  dueThisSeason: boolean;
+}
+
+export function adoptionStreak(checks: StoredCheck[], siteCode: string | null | undefined, now: Date): Streak {
+  const current = seasonOrdinal(now);
+  const done = new Set(
+    siteCode
+      ? checks.filter((c) => c.siteCode === siteCode && c.gate.outcome === "ACCEPTED").map((c) => seasonOrdinal(new Date(c.submittedAt)))
+      : [],
+  );
+  let s = done.has(current) ? current : current - 1;
+  let count = 0;
+  while (done.has(s)) { count++; s--; }
+  return {
+    count,
+    recent: [current - 3, current - 2, current - 1, current].map((o) => ({ ordinal: o, done: done.has(o) })),
+    dueThisSeason: !!siteCode && !done.has(current),
+  };
+}
+
+/** A check in progress, saved as the volunteer answers so it survives the app closing. */
+export interface Draft {
+  siteCode: string;
+  answers: import("./checkForm").Answers;
+  stepIdx: number;
+  startedAt: string;
+  savedAt: string;
+}
+
+const KEY_DRAFT = "sk.draft.v1";
+const DRAFT_MAX_AGE_H = 12;
+
+export function loadDraft(now = new Date()): Draft | null {
+  const d = read<Draft | null>(KEY_DRAFT, null);
+  if (!d) return null;
+  return now.getTime() - Date.parse(d.savedAt) < DRAFT_MAX_AGE_H * 3600_000 ? d : null;
+}
+
+export function saveDraft(d: Draft) {
+  write(KEY_DRAFT, d);
+}
+
+export function clearDraft() {
+  try { localStorage.removeItem(KEY_DRAFT); } catch { /* ignore */ }
 }

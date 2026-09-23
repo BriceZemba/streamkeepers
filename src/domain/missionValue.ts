@@ -18,6 +18,8 @@ export interface Weights {
   labRisk: number;
   /** Max points scaled by how many people live near the water (percentile). */
   peopleNearby: number;
+  /** Bonus for a volunteer's seasonal check of the stream they adopted (builds a time series). */
+  adopted: number;
 }
 
 export const DEFAULT_WEIGHTS: Weights = {
@@ -28,17 +30,27 @@ export const DEFAULT_WEIGHTS: Weights = {
   seasonGap: 30,
   labRisk: 30,
   peopleNearby: 20,
+  adopted: 15,
 };
 
 export interface CitizenActivity {
   /** Accepted checks at this site in the current season. */
   checksThisSeason: number;
+  /** This volunteer adopted the site and hasn't checked it yet this season. */
+  adoptedAndDue?: boolean;
+}
+
+/** Translatable message: a key plus parameters; `reason` keeps the English text. */
+export interface Msg {
+  key: string;
+  params?: Record<string, string | number>;
 }
 
 export interface ValuePart {
-  key: "base" | "labStaleness" | "noLabRecord" | "seasonGap" | "labRisk" | "peopleNearby" | "coverage";
+  key: "base" | "labStaleness" | "noLabRecord" | "seasonGap" | "labRisk" | "peopleNearby" | "adopted" | "coverage";
   points: number;
   reason: string;
+  msg: Msg;
 }
 
 export interface MissionValue {
@@ -78,13 +90,13 @@ export function missionValue(
   if (site.lastLabDate) {
     const months = Math.max(0, monthsBetween(site.lastLabDate, now));
     const pts = w.labStaleness * Math.min(1, months / w.labStaleCapMonths);
-    need.push({ key: "labStaleness", points: pts, reason: `Last OneAquaHealth lab visit ${fmtMonth(site.lastLabDate)} (${months} months ago)` });
+    need.push({ key: "labStaleness", points: pts, reason: `Last OneAquaHealth lab visit ${fmtMonth(site.lastLabDate)} (${months} months ago)`, msg: { key: "reason.labStaleness", params: { date: site.lastLabDate, months } } });
   } else {
-    need.push({ key: "noLabRecord", points: w.noLabRecord, reason: "No lab data on record: citizen checks are the only data here" });
+    need.push({ key: "noLabRecord", points: w.noLabRecord, reason: "No lab data on record: citizen checks are the only data here", msg: { key: "reason.noLabRecord" } });
   }
 
   if (activity.checksThisSeason === 0) {
-    need.push({ key: "seasonGap", points: w.seasonGap, reason: "Nobody has checked this stream this season" });
+    need.push({ key: "seasonGap", points: w.seasonGap, reason: "Nobody has checked this stream this season", msg: { key: "reason.seasonGap" } });
   }
 
   if (site.labRiskScore !== null) {
@@ -92,6 +104,7 @@ export function missionValue(
       key: "labRisk",
       points: w.labRisk * site.labRiskScore,
       reason: `Lab health-risk score ${site.labRiskScore.toFixed(2)} (pathogens, faecal, resistance genes)`,
+      msg: { key: "reason.labRisk", params: { score: site.labRiskScore.toFixed(2) } },
     });
   }
 
@@ -103,18 +116,24 @@ export function missionValue(
         peoplePercentile >= 0.5
           ? `More people live near this water than at ${Math.round(peoplePercentile * 100)}% of OAH sites`
           : "Some people live near this water",
+      msg: peoplePercentile >= 0.5 ? { key: "reason.peopleHigh", params: { pct: Math.round(peoplePercentile * 100) } } : { key: "reason.peopleLow" },
     });
   }
 
   // Diminishing returns: each accepted check this season halves, then thirds... the need.
   const coverage = 1 / (1 + activity.checksThisSeason);
-  const parts: ValuePart[] = [{ key: "base", points: w.base, reason: "Every careful check counts" }];
+  const parts: ValuePart[] = [{ key: "base", points: w.base, reason: "Every careful check counts", msg: { key: "reason.base" } }];
   for (const p of need) parts.push({ ...p, points: p.points * coverage });
+  if (activity.adoptedAndDue) {
+    // Not reduced by coverage: a repeat check by the same keeper builds this stream's time series.
+    parts.push({ key: "adopted", points: w.adopted, reason: "Your adopted stream: this season's check continues its time series", msg: { key: "reason.adopted" } });
+  }
   if (activity.checksThisSeason > 0) {
     parts.push({
       key: "coverage",
       points: 0,
       reason: `Already checked ${activity.checksThisSeason}× this season, so this visit adds less (need × ${coverage.toFixed(2)})`,
+      msg: { key: "reason.coverage", params: { n: activity.checksThisSeason, factor: coverage.toFixed(2) } },
     });
   }
   // The total is the exact sum of the rounded parts shown, so the ledger always adds up.
@@ -131,4 +150,19 @@ export function seasonKey(d: Date): string {
   if (m <= 4) return `${y}-spring`;
   if (m <= 7) return `${y}-summer`;
   return `${y}-autumn`;
+}
+
+const SEASONS = ["winter", "spring", "summer", "autumn"] as const;
+export type SeasonName = (typeof SEASONS)[number];
+
+/** Consecutive integer per meteorological season (Dec counts toward next year's winter). */
+export function seasonOrdinal(d: Date): number {
+  const m = d.getUTCMonth();
+  const y = d.getUTCFullYear() + (m === 11 ? 1 : 0);
+  const idx = m === 11 || m <= 1 ? 0 : m <= 4 ? 1 : m <= 7 ? 2 : 3;
+  return y * 4 + idx;
+}
+
+export function seasonOf(ordinal: number): { year: number; name: SeasonName } {
+  return { year: Math.floor(ordinal / 4), name: SEASONS[ordinal % 4] };
 }

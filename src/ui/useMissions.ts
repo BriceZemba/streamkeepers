@@ -11,17 +11,21 @@ export interface Mission {
 const FACTS = buildSiteFacts();
 const PEOPLE_PCT = percentileRanks(FACTS.map((s) => s.peopleNearby));
 
-export function useMissions(counts: Map<string, number>, now: Date): Mission[] {
+/** @param adoptedDue site code of the volunteer's adopted stream if its seasonal check is still due */
+export function useMissions(counts: Map<string, number>, now: Date, adoptedDue: string | null): Mission[] {
   return useMemo(
     () =>
       FACTS.map((site, i) => {
         const n = counts.get(site.code) ?? 0;
-        return { site, checksThisSeason: n, value: missionValue(site, { checksThisSeason: n }, now, PEOPLE_PCT[i]) };
+        return { site, checksThisSeason: n, value: missionValue(site, { checksThisSeason: n, adoptedAndDue: site.code === adoptedDue }, now, PEOPLE_PCT[i]) };
       }).sort((a, b) => b.value.points - a.value.points),
-    [counts, now],
+    [counts, now, adoptedDue],
   );
 }
 
 export function band(points: number): "high" | "mid" | "low" {
   return points >= 90 ? "high" : points >= 50 ? "mid" : "low";
 }
+
+/** Accent- and case-insensitive match, so "estacao" finds "Estação". */
+export const fold = (s: string) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
