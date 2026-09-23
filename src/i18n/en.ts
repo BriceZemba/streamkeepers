@@ -47,7 +47,7 @@ export const en: Record<string, string> = {
   "detail.total": "Mission value",
   "detail.promise": "Your points never depend on what you find. A clean stream and a polluted one earn exactly the same.",
   "detail.start": "Start the stream check",
-  "detail.meta": "About 3 minutes · 7 short steps · no account needed",
+  "detail.meta": "A few minutes · 7 short steps · no account needed",
   "detail.directions": "Directions",
   "detail.adopt": "Adopt this stream",
   "detail.adopted": "Adopted",

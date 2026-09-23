@@ -46,7 +46,7 @@ export const pt: Record<string, string> = {
   "detail.total": "Valor da missão",
   "detail.promise": "Os seus pontos nunca dependem do que encontra. Uma ribeira limpa e uma poluída valem exatamente o mesmo.",
   "detail.start": "Começar a verificação",
-  "detail.meta": "Cerca de 3 minutos · 7 passos curtos · sem conta",
+  "detail.meta": "Poucos minutos · 7 passos curtos · sem conta",
   "detail.directions": "Direções",
   "detail.adopt": "Adotar esta ribeira",
   "detail.adopted": "Adotada",

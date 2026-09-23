@@ -46,7 +46,7 @@ export const fr: Record<string, string> = {
   "detail.total": "Valeur de la mission",
   "detail.promise": "Vos points ne dépendent jamais de ce que vous trouvez. Un cours d'eau propre et un pollué rapportent exactement pareil.",
   "detail.start": "Commencer le relevé",
-  "detail.meta": "Environ 3 minutes · 7 étapes courtes · sans compte",
+  "detail.meta": "Quelques minutes · 7 étapes courtes · sans compte",
   "detail.directions": "Itinéraire",
   "detail.adopt": "Adopter ce cours d'eau",
   "detail.adopted": "Adopté",
