@@ -11,7 +11,8 @@
     "snapshot": "tsx scripts/snapshot.ts",
     "test": "vitest run",
     "dev:phone": "vite --host",
-    "fhir:smoke": "tsx scripts/fhir-smoke.ts"
+    "fhir:smoke": "tsx scripts/fhir-smoke.ts",
+    "simulate": "tsx scripts/simulate.ts"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",
