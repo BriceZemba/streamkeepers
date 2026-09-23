@@ -4,6 +4,7 @@
 import { seasonKey, seasonOrdinal } from "./missionValue";
 import type { CheckSubmission, GateResult } from "./qualityGate";
 import type { SyncResult } from "../fhir/client";
+import { isAccepted, type Review } from "./review";
 
 export interface StoredCheck extends CheckSubmission {
   id: string;
@@ -14,6 +15,10 @@ export interface StoredCheck extends CheckSubmission {
   creditedPoints: number;
   /** Last attempt to store this check on a FHIR server (absent = not tried yet). */
   sync?: SyncResult;
+  /** Reviewer decision, for checks the quality gate held. */
+  review?: Review;
+  /** Last attempt to store the review (Observations + Provenance) on the FHIR server. */
+  reviewSync?: SyncResult;
 }
 
 /**
@@ -94,7 +99,7 @@ export function checksThisSeason(checks: StoredCheck[], now: Date, includeSimula
   const counts = new Map<string, number>();
   if (includeSimulated) for (const [code, n] of Object.entries(SIMULATED_COMMUNITY_CHECKS)) counts.set(code, n);
   for (const c of checks) {
-    if (c.gate.outcome !== "ACCEPTED" || c.gate.noNewPoints) continue;
+    if (!isAccepted(c) || c.gate.noNewPoints) continue;
     if (seasonKey(new Date(c.submittedAt)) !== season) continue;
     counts.set(c.siteCode, (counts.get(c.siteCode) ?? 0) + 1);
   }
@@ -114,7 +119,7 @@ export function adoptionStreak(checks: StoredCheck[], siteCode: string | null | 
   const current = seasonOrdinal(now);
   const done = new Set(
     siteCode
-      ? checks.filter((c) => c.siteCode === siteCode && c.gate.outcome === "ACCEPTED").map((c) => seasonOrdinal(new Date(c.submittedAt)))
+      ? checks.filter((c) => c.siteCode === siteCode && isAccepted(c)).map((c) => seasonOrdinal(new Date(c.submittedAt)))
       : [],
   );
   let s = done.has(current) ? current : current - 1;

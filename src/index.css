@@ -239,7 +239,7 @@ main { flex: 1; display: flex; flex-direction: column; }
 
 /* ---------- Me / journal ---------- */
 .journal { padding: 0 20px 130px; }
-.journal-hero { position: relative; overflow: hidden; margin: 0 -20px 20px; padding: 26px 20px 22px; background: var(--ink); color: var(--paper); }
+.journal-hero { position: relative; overflow: hidden; margin: 0 -20px 20px; padding: 26px 20px 22px; background: #16261f; color: #f5f0e6; }
 .journal-hero .contours { position: absolute; inset: 0; width: 100%; height: 100%; color: #2b4238; }
 .journal-hero > * { position: relative; }
 .journal-hero .eyebrow { color: #a9b8b0; }
@@ -363,6 +363,19 @@ main { flex: 1; display: flex; flex-direction: column; }
 .map-card-name small { display: block; font-family: var(--sans); font-weight: 400; font-size: 0.78rem; color: var(--ink-2); }
 .map-wrap.is-full .map-card ~ .map-tools, .map-wrap.is-full:has(.map-card) .map-tools { bottom: 96px; }
 .me-dot { width: 18px; height: 18px; border-radius: 50%; background: #2f7b98; border: 3px solid #fff; box-shadow: 0 0 0 6px rgba(47, 123, 152, 0.25); }
+.coord-link { width: 100%; text-align: left; font: inherit; color: var(--ink); margin: 0 0 22px; border-color: var(--river); background: var(--river-soft); }
+.coord-link > span:last-child { font-size: 1.2rem; color: var(--river); }
+.coord-card header { align-items: flex-start; }
+.held-reasons { margin: 0; padding-left: 18px; font-size: 0.86rem; color: var(--rust); }
+.held-reasons strong { color: var(--ink); }
+.coverage { display: grid; gap: 6px; margin-top: 10px; }
+.cov-row { display: grid; grid-template-columns: 88px 1fr auto; gap: 10px; align-items: center; padding: 8px 10px; border: 1px solid var(--line-2); border-radius: var(--r-sm); background: var(--card); font: inherit; color: var(--ink); text-align: left; cursor: pointer; }
+.cov-row.is-on { border-color: var(--ink); }
+.cov-name { font-family: var(--serif); font-weight: 600; }
+.cov-bar { height: 8px; border-radius: 8px; background: var(--paper-2); overflow: hidden; }
+.cov-bar span { display: block; height: 100%; background: var(--moss); border-radius: 8px; }
+.cov-num { font-size: 0.8rem; text-align: right; white-space: nowrap; }
+.cov-num small { display: block; color: var(--rust); font-size: 0.72rem; }
 .toast { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%); z-index: 1300; margin: 0; padding: 10px 16px; border-radius: 999px; background: var(--ink); color: var(--paper); font-weight: 650; font-size: 0.88rem; box-shadow: var(--shadow); animation: rise 0.2s ease both; }
 .btn-soft { border: 1.5px solid var(--line); background: var(--card); color: var(--ink); min-height: 46px; font-size: 0.9rem; }
 .btn-soft[aria-pressed="true"] { border-color: var(--moss); background: var(--moss-soft); color: var(--moss); }

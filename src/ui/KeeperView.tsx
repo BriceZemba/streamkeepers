@@ -4,6 +4,7 @@ import type { Keeper, StoredCheck, Streak } from "../domain/store";
 import { FHIR_SERVERS, type ServerKey } from "../fhir/client";
 import { useI18n } from "../i18n";
 import { Contours } from "./glyphs";
+import { isAccepted, isPending } from "../domain/review";
 import { missionLink } from "../domain/reminder";
 import { RemindMenu } from "./RemindMenu";
 
@@ -13,7 +14,7 @@ export interface Settings {
   server: ServerKey;
 }
 
-export function KeeperView({ keeper, checks, siteName, siteGeo, streak, settings, onSettings, onName, onReset, onRetry, onOpenSite }: {
+export function KeeperView({ keeper, checks, siteName, siteGeo, streak, settings, onSettings, onName, onReset, onRetry, onOpenSite, onOpenCoordinator }: {
   keeper: Keeper;
   checks: StoredCheck[];
   siteName: (code: string) => string;
@@ -25,10 +26,11 @@ export function KeeperView({ keeper, checks, siteName, siteGeo, streak, settings
   onReset: () => void;
   onRetry: (id: string) => void;
   onOpenSite: (code: string) => void;
+  onOpenCoordinator: () => void;
 }) {
   const { t, lang } = useI18n();
   const total = checks.reduce((s, c) => s + c.creditedPoints, 0);
-  const held = checks.filter((c) => c.gate.outcome === "REVIEW").length;
+  const held = checks.filter(isPending).length;
   const streams = new Set(checks.map((c) => c.siteCode)).size;
   const locale = lang === "pt" ? "pt-PT" : lang === "fr" ? "fr-FR" : "en-GB";
   return (
@@ -109,13 +111,18 @@ export function KeeperView({ keeper, checks, siteName, siteGeo, streak, settings
                   ) : t("journal.local")}
                 </span>
               </span>
-              <span className={`pill ${c.gate.outcome === "ACCEPTED" ? "pill-ok" : "pill-hold"}`}>
-                {c.gate.outcome === "ACCEPTED" ? `+${c.creditedPoints}${c.practice ? ` ${t("journal.practice")}` : ""}` : t("journal.withReviewer")}
+              <span className={`pill ${isAccepted(c) ? "pill-ok" : "pill-hold"}`}>
+                {isAccepted(c) ? `+${c.creditedPoints}${c.practice ? ` ${t("journal.practice")}` : ""}` : c.review ? "✕" : t("journal.withReviewer")}
               </span>
             </li>
           ))}
         </ul>
       )}
+
+      <button className="setting coord-link" onClick={onOpenCoordinator}>
+        <span>{t("coord.open")}<small>{t("coord.openHint")}</small></span>
+        <span aria-hidden="true">→</span>
+      </button>
 
       <p className="eyebrow" style={{ marginBottom: 8 }}>{t("journal.settings")}</p>
       <div className="settings">

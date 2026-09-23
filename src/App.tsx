@@ -7,7 +7,10 @@ import {
   saveCheck, saveKeeper, updateCheck, type Draft, type StoredCheck,
 } from "./domain/store";
 import { FHIR_SERVERS, syncCheck, type SyncResult } from "./fhir/client";
-import { checkBundle } from "./fhir/mapping";
+import { checkBundle, type TransactionBundle } from "./fhir/mapping";
+import { reviewBundle } from "./fhir/review";
+import { applyReview, type Decision, type RejectReason } from "./domain/review";
+import { CoordinatorView } from "./ui/CoordinatorView";
 import { LANGS, useI18n } from "./i18n";
 import { CheckFlow, type CheckDraft } from "./ui/CheckFlow";
 import { Mark } from "./ui/glyphs";
@@ -20,6 +23,7 @@ import { useMissions, type Mission } from "./ui/useMissions";
 type Screen =
   | { name: "missions"; focus?: string }
   | { name: "keeper" }
+  | { name: "coordinator" }
   | { name: "check"; mission: Mission; resume?: Draft | null }
   | { name: "result"; checkId: string; siteName: string };
 
@@ -42,7 +46,9 @@ export default function App() {
   const online = useOnline();
   // A shared or reminder link (?site=C5) opens that stream's mission directly.
   const [screen, setScreen] = useState<Screen>(() => {
-    const site = new URLSearchParams(location.search).get("site");
+    const params = new URLSearchParams(location.search);
+    if (params.has("coordinator")) return { name: "coordinator" };
+    const site = params.get("site");
     return site && SITES.has(site) ? { name: "missions", focus: site } : { name: "missions" };
   });
   const [checks, setChecks] = useState<StoredCheck[]>(loadChecks);
@@ -51,6 +57,7 @@ export default function App() {
   const [now, setNow] = useState(() => new Date());
   const [draft, setDraft] = useState<Draft | null>(() => loadDraft());
   const [syncing, setSyncing] = useState<Set<string>>(new Set());
+  const [reviewing, setReviewing] = useState<Set<string>>(new Set());
   const syncingRef = useRef(syncing);
   syncingRef.current = syncing;
 
@@ -65,21 +72,45 @@ export default function App() {
   };
   const updateKeeper = (k: typeof keeper) => { setKeeper(k); saveKeeper(k); };
 
-  /** Store on the chosen FHIR server. Practice checks (labelled test data) may fall
+  /** Send a bundle to the chosen FHIR server. Practice data (labelled test data) may fall
    * back to the public test server; real checks stay queued on the phone instead. */
+  async function send(bundle: TransactionBundle, practice: boolean, preferred?: string): Promise<SyncResult> {
+    const base = preferred ?? FHIR_SERVERS[settings.server].base;
+    let result: SyncResult = await syncCheck(base, bundle);
+    if (!result.ok && result.refs.length === 0 && practice && base !== FHIR_SERVERS.hapi.base) {
+      const fallback = await syncCheck(FHIR_SERVERS.hapi.base, bundle);
+      if (fallback.ok) result = fallback;
+    }
+    return result;
+  }
+
   async function sync(check: StoredCheck) {
     const site = SITES.get(check.siteCode);
     if (!site || syncingRef.current.has(check.id)) return;
     setSyncing((s) => new Set(s).add(check.id));
-    const bundle = checkBundle(check, site);
-    let result: SyncResult = await syncCheck(FHIR_SERVERS[settings.server].base, bundle);
-    if (!result.ok && result.refs.length === 0 && check.practice && settings.server !== "hapi") {
-      const fallback = await syncCheck(FHIR_SERVERS.hapi.base, bundle);
-      if (fallback.ok) result = fallback;
-    }
+    const result = await send(checkBundle(check, site), check.practice);
     setChecks(updateCheck(check.id, { sync: result }));
     setSyncing((s) => { const n = new Set(s); n.delete(check.id); return n; });
   }
+
+  /** Write a reviewer's decision to the server where the check already is (Observations + Provenance). */
+  async function syncReview(check: StoredCheck) {
+    const site = SITES.get(check.siteCode);
+    if (!site || !check.review) return;
+    setReviewing((s) => new Set(s).add(check.id));
+    const result = await send(reviewBundle(check, site), check.practice, check.sync?.ok ? check.sync.server : undefined);
+    setChecks(updateCheck(check.id, { reviewSync: result }));
+    setReviewing((s) => { const n = new Set(s); n.delete(check.id); return n; });
+  }
+
+  const decide = (id: string, decision: Decision, reviewer: string, reason?: RejectReason) => {
+    const c = checks.find((x) => x.id === id);
+    if (!c) return;
+    const reviewed = applyReview(c, { decision, reason, reviewer, at: new Date().toISOString() });
+    setChecks(updateCheck(id, { review: reviewed.review, creditedPoints: reviewed.creditedPoints }));
+    setNow(new Date());
+    if (navigator.onLine) void syncReview(reviewed);
+  };
 
   // Send anything still waiting whenever the connection comes back (and on start).
   useEffect(() => {
@@ -193,17 +224,32 @@ export default function App() {
             onReset={() => { clearChecks(); setChecks([]); }}
             onRetry={retry}
             onOpenSite={(code) => setScreen({ name: "missions", focus: code })}
+            onOpenCoordinator={() => setScreen({ name: "coordinator" })}
+          />
+        )}
+        {screen.name === "coordinator" && (
+          <CoordinatorView
+            checks={checks}
+            sites={[...SITES.values()]}
+            counts={counts}
+            simulated={settings.simulated}
+            now={now}
+            reviewing={reviewing}
+            onDecide={decide}
+            onRetryReview={(id) => { const c = checks.find((x) => x.id === id); if (c) void syncReview(c); }}
+            onBack={() => setScreen({ name: "keeper" })}
+            onOpenSite={(code) => setScreen({ name: "missions", focus: code })}
           />
         )}
       </main>
 
       {!inCheck && (
         <nav className="tabbar" aria-label="Main">
-          <button aria-current={screen.name !== "keeper" ? "page" : undefined} onClick={() => setScreen({ name: "missions" })}>
+          <button aria-current={screen.name !== "keeper" && screen.name !== "coordinator" ? "page" : undefined} onClick={() => setScreen({ name: "missions" })}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg>
             {t("nav.missions")}
           </button>
-          <button aria-current={screen.name === "keeper" ? "page" : undefined} onClick={() => setScreen({ name: "keeper" })}>
+          <button aria-current={screen.name === "keeper" || screen.name === "coordinator" ? "page" : undefined} onClick={() => setScreen({ name: "keeper" })}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z" /><path d="M9 8h6M9 12h6" /></svg>
             {t("nav.journal")}
           </button>
