@@ -158,6 +158,16 @@ export const en: Record<string, string> = {
   "map.no3d": "3D isn't available on this device",
   "detail.streetView": "Street View",
 
+  "remind.google": "Google Calendar",
+  "remind.outlookOnce": "Outlook (one reminder)",
+  "remind.ics": "Other calendar (.ics file)",
+  "remind.icsHint": "Apple Calendar, Samsung and others. On iPhone it opens in Calendar.",
+  "map.locate": "Near me",
+  "map.full": "Enlarge map",
+  "map.exitFull": "Close map",
+  "map.you": "You are here",
+  "map.openMission": "See the mission",
+
   "season.winter": "Winter",
   "season.spring": "Spring",
   "season.summer": "Summer",

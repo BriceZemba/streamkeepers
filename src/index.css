@@ -344,6 +344,25 @@ main { flex: 1; display: flex; flex-direction: column; }
 .map-3d .maplibregl-ctrl-group { background: var(--card); border-radius: 10px; box-shadow: var(--shadow); }
 .map-3d .maplibregl-ctrl-top-left { margin: 12px; }
 .pin-3d { border: 0; background: transparent; padding: 0; cursor: pointer; }
+.remind { position: relative; }
+.remind .btn { font-size: 0.9rem; min-height: 46px; }
+.menu { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 1300; min-width: 240px; display: grid; padding: 6px; border-radius: var(--r); background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); animation: rise 0.15s ease both; }
+.menu a, .menu button { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 0; border-radius: var(--r-sm); background: transparent; color: var(--ink); font-weight: 600; font-size: 0.9rem; text-decoration: none; text-align: left; cursor: pointer; }
+.menu a:hover, .menu button:hover { background: var(--paper-2); }
+.menu small { display: block; font-weight: 400; color: var(--ink-2); font-size: 0.76rem; margin-top: 2px; }
+.menu-dot { flex: none; width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; }
+.map-wrap.is-full { position: fixed; inset: 0; height: auto; min-height: 0; z-index: 1500; border-radius: 0; }
+.map-tools { position: absolute; right: 12px; bottom: 40px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.map-wrap:not(.is-full) .map-tools { bottom: 44px; }
+.map-tool { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 42px; height: 42px; padding: 0 10px; border-radius: 999px; border: 0; background: var(--card); color: var(--ink); box-shadow: var(--shadow); font-weight: 700; font-size: 0.82rem; cursor: pointer; }
+.map-tool svg { width: 18px; height: 18px; flex: none; }
+.map-tool.is-on { color: var(--river); }
+.map-tool:disabled { opacity: 0.7; cursor: progress; }
+.map-card { position: absolute; left: 12px; right: 12px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 1001; display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 10px 12px; border-radius: var(--r); background: var(--card); box-shadow: var(--shadow); animation: rise 0.2s ease both; }
+.map-card-name { font-family: var(--serif); font-weight: 600; font-size: 1.05rem; line-height: 1.2; }
+.map-card-name small { display: block; font-family: var(--sans); font-weight: 400; font-size: 0.78rem; color: var(--ink-2); }
+.map-wrap.is-full .map-card ~ .map-tools, .map-wrap.is-full:has(.map-card) .map-tools { bottom: 96px; }
+.me-dot { width: 18px; height: 18px; border-radius: 50%; background: #2f7b98; border: 3px solid #fff; box-shadow: 0 0 0 6px rgba(47, 123, 152, 0.25); }
 .toast { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%); z-index: 1300; margin: 0; padding: 10px 16px; border-radius: 999px; background: var(--ink); color: var(--paper); font-weight: 650; font-size: 0.88rem; box-shadow: var(--shadow); animation: rise 0.2s ease both; }
 .btn-soft { border: 1.5px solid var(--line); background: var(--card); color: var(--ink); min-height: 46px; font-size: 0.9rem; }
 .btn-soft[aria-pressed="true"] { border-color: var(--moss); background: var(--moss-soft); color: var(--moss); }

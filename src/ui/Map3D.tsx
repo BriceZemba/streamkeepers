@@ -9,6 +9,7 @@ import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import { band, type Mission } from "./useMissions";
+import type { Me } from "./MissionMap";
 
 
 setWorkerUrl(workerUrl);
@@ -60,10 +61,11 @@ function pinElement(m: Mission, selected: boolean, onSelect: (code: string) => v
   return host;
 }
 
-export default function Map3D({ missions, selected, onSelect, label }: { missions: Mission[]; selected: Mission | null; onSelect: (code: string) => void; label: string }) {
+export default function Map3D({ missions, selected, onSelect, label, me }: { missions: Mission[]; selected: Mission | null; onSelect: (code: string) => void; label: string; me: Me | null }) {
   const el = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const markers = useRef<Marker[]>([]);
+  const meMarker = useRef<Marker | null>(null);
 
   useEffect(() => {
     if (!el.current) return;
@@ -103,18 +105,30 @@ export default function Map3D({ missions, selected, onSelect, label }: { mission
     );
   }, [missions, selected, onSelect]);
 
+  // "You are here" dot
+  useEffect(() => {
+    const m = map.current;
+    meMarker.current?.remove();
+    meMarker.current = null;
+    if (!m || !me) return;
+    const dot = document.createElement("div");
+    dot.className = "me-dot";
+    meMarker.current = new Marker({ element: dot }).setLngLat([me.lon, me.lat]).addTo(m);
+  }, [me]);
+
   // Frame the area when the set of sites changes; fly to a selected site.
   useEffect(() => {
     const m = map.current;
     if (!m || missions.length === 0 || selected) return;
     const b = new LngLatBounds();
     missions.forEach((ms) => b.extend([ms.site.lon, ms.site.lat]));
+    if (me) b.extend([me.lon, me.lat]);
     // A flat fit at a steep tilt zooms far out and shows mostly sky and haze, so
     // fit flat, then tilt at a zoom that keeps the valleys readable.
     const cam = m.cameraForBounds(b, { padding: 40 });
     if (cam?.center) m.easeTo({ center: cam.center, zoom: Math.min(14, Math.max(12, cam.zoom ?? 12)), pitch: 55, bearing: -18, duration: 900 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [codes]);
+  }, [codes, me?.lat, me?.lon]);
   useEffect(() => {
     if (selected) map.current?.flyTo({ center: [selected.site.lon, selected.site.lat], zoom: 15, pitch: 68, duration: 1200 });
   }, [selected]);

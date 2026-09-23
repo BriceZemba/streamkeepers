@@ -1,18 +1,27 @@
 import { useEffect, useMemo } from "react";
-import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
+import { Circle, CircleMarker, MapContainer, Marker, TileLayer, Tooltip, useMap } from "react-leaflet";
 import { divIcon, latLngBounds } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { band, type Mission } from "./useMissions";
+import { useI18n } from "../i18n";
 
-function FitTo({ missions }: { missions: Mission[] }) {
+export interface Me {
+  lat: number;
+  lon: number;
+  accuracyM: number;
+}
+
+function FitTo({ missions, me }: { missions: Mission[]; me: Me | null }) {
   const map = useMap();
-  const key = missions.map((m) => m.site.code).sort().join();
+  const key = missions.map((m) => m.site.code).sort().join() + (me ? `|${me.lat.toFixed(3)},${me.lon.toFixed(3)}` : "");
   useEffect(() => {
     if (missions.length === 0) return;
     // Wait for the container's final size, otherwise the fit uses a stale size.
     const t = setTimeout(() => {
       map.invalidateSize();
-      map.fitBounds(latLngBounds(missions.map((m) => [m.site.lat, m.site.lon])), { padding: [28, 28], maxZoom: 14 });
+      const pts: [number, number][] = missions.map((m) => [m.site.lat, m.site.lon]);
+      if (me) pts.push([me.lat, me.lon]);
+      map.fitBounds(latLngBounds(pts), { padding: [28, 28], maxZoom: 14 });
     }, 60);
     return () => clearTimeout(t);
     // Fit only when the set of sites changes, not on every points update.
@@ -50,7 +59,8 @@ const icon = (m: Mission, selected: boolean) =>
 
 export type FlatView = "plan" | "satellite";
 
-export function MissionMap({ missions, selected, onSelect, label, view = "plan" }: { missions: Mission[]; selected: Mission | null; onSelect: (code: string) => void; label: string; view?: FlatView }) {
+export function MissionMap({ missions, selected, onSelect, label, me, view = "plan" }: { missions: Mission[]; selected: Mission | null; onSelect: (code: string) => void; label: string; me: Me | null; view?: FlatView }) {
+  const { t } = useI18n();
   // Draw higher-value pins on top.
   const ordered = useMemo(() => [...missions].sort((a, b) => a.value.points - b.value.points), [missions]);
   return (
@@ -80,7 +90,15 @@ export function MissionMap({ missions, selected, onSelect, label, view = "plan" 
           </>
         )}
         <KeepSized />
-        <FitTo missions={missions} />
+        <FitTo missions={missions} me={me} />
+        {me && (
+          <>
+            <Circle center={[me.lat, me.lon]} radius={Math.min(me.accuracyM, 2000)} pathOptions={{ color: "#2f7b98", weight: 1, fillOpacity: 0.12 }} interactive={false} />
+            <CircleMarker center={[me.lat, me.lon]} radius={8} pathOptions={{ color: "#ffffff", weight: 3, fillColor: "#2f7b98", fillOpacity: 1 }}>
+              <Tooltip direction="top">{t("map.you")}</Tooltip>
+            </CircleMarker>
+          </>
+        )}
         <FlyToSelected mission={selected} />
         {ordered.map((m) => (
           <Marker

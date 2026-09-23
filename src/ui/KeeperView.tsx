@@ -4,8 +4,8 @@ import type { Keeper, StoredCheck, Streak } from "../domain/store";
 import { FHIR_SERVERS, type ServerKey } from "../fhir/client";
 import { useI18n } from "../i18n";
 import { Contours } from "./glyphs";
-import { missionLink, reminderIcs } from "../domain/reminder";
-import { downloadIcs } from "./actions";
+import { missionLink } from "../domain/reminder";
+import { RemindMenu } from "./RemindMenu";
 
 export interface Settings {
   practice: boolean;
@@ -65,23 +65,17 @@ export function KeeperView({ keeper, checks, siteName, siteGeo, streak, settings
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               <button className="btn btn-soft btn-sm" onClick={() => onOpenSite(keeper.adopted!)}>{t("journal.open")} →</button>
-              <button
-                className="btn btn-soft btn-sm"
-                title={t("journal.remindHint")}
-                onClick={() => {
-                  const code = keeper.adopted!;
-                  const geo = siteGeo(code);
-                  if (!geo) return;
-                  downloadIcs(`streamkeepers-${code}-seasonal.ics`, reminderIcs({
-                    siteCode: code, siteName: siteName(code), lat: geo.lat, lon: geo.lon, seasonal: true, now: new Date(),
-                    url: missionLink(location.href, code, lang),
-                    title: t("remind.title", { site: siteName(code) }),
-                    description: t("remind.descSeason", { site: siteName(code) }),
-                  }));
-                }}
-              >
-                ⏰ {t("journal.remindSeason")}
-              </button>
+              {siteGeo(keeper.adopted) && (
+                <RemindMenu
+                  label={`⏰ ${t("journal.remindSeason")}`}
+                  reminder={{
+                    siteCode: keeper.adopted, siteName: siteName(keeper.adopted), lat: siteGeo(keeper.adopted)!.lat, lon: siteGeo(keeper.adopted)!.lon,
+                    seasonal: true, now: new Date(), url: missionLink(location.href, keeper.adopted, lang),
+                    title: t("remind.title", { site: siteName(keeper.adopted) }),
+                    description: t("remind.descSeason", { site: siteName(keeper.adopted) }),
+                  }}
+                />
+              )}
             </div>
             <p className="tiny muted" style={{ margin: "8px 0 0" }}>{t("journal.remindHint")}</p>
             <p className="small" style={{ margin: "10px 0 0" }}>

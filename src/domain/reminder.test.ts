@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { missionLink, nextSaturdayMorning, reminderIcs } from "./reminder";
+import { googleCalendarUrl, missionLink, nextSaturdayMorning, outlookCalendarUrl, reminderIcs } from "./reminder";
 
 const base = {
   siteCode: "C5", siteName: "Mina Hospital", lat: 40.2186, lon: -8.42733,
@@ -32,5 +32,17 @@ describe("calendar reminder", () => {
 
   it("builds a mission link that keeps the language and drops other parameters", () => {
     expect(missionLink("https://sk.app/?practice=1#x", "C5", "pt")).toBe("https://sk.app/?site=C5&lang=pt");
+  });
+
+  it("builds Google and Outlook links that open the calendar directly", () => {
+    const g = new URL(googleCalendarUrl({ ...base, seasonal: true }));
+    expect(g.hostname).toBe("calendar.google.com");
+    expect(g.searchParams.get("dates")).toBe("20260926T100000/20260926T103000");
+    expect(g.searchParams.get("recur")).toBe("RRULE:FREQ=MONTHLY;INTERVAL=3;COUNT=8");
+    expect(g.searchParams.get("details")).toContain("?site=C5");
+    expect(new URL(googleCalendarUrl({ ...base, seasonal: false })).searchParams.has("recur")).toBe(false);
+    const o = new URL(outlookCalendarUrl({ ...base, seasonal: false }));
+    expect(o.searchParams.get("startdt")).toBe("2026-09-26T10:00:00");
+    expect(o.searchParams.get("subject")).toBe(base.title);
   });
 });

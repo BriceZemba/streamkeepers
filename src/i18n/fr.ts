@@ -157,6 +157,16 @@ export const fr: Record<string, string> = {
   "map.no3d": "3D indisponible sur cet appareil",
   "detail.streetView": "Street View",
 
+  "remind.google": "Google Agenda",
+  "remind.outlookOnce": "Outlook (un seul rappel)",
+  "remind.ics": "Autre agenda (fichier .ics)",
+  "remind.icsHint": "Calendrier Apple, Samsung et autres. Sur iPhone, il s'ouvre dans Calendrier.",
+  "map.locate": "Près de moi",
+  "map.full": "Agrandir la carte",
+  "map.exitFull": "Fermer la carte",
+  "map.you": "Vous êtes ici",
+  "map.openMission": "Voir la mission",
+
   "season.winter": "Hiver",
   "season.spring": "Printemps",
   "season.summer": "Été",

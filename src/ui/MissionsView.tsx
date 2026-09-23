@@ -3,14 +3,15 @@ import { CITIES } from "../domain/siteFacts";
 import { distanceM, getPosition } from "../domain/geo";
 import type { Draft } from "../domain/store";
 import { useI18n } from "../i18n";
-import { missionLink, reminderIcs } from "../domain/reminder";
-import { downloadIcs, shareLink } from "./actions";
+import { missionLink, type ReminderInput } from "../domain/reminder";
+import { shareLink } from "./actions";
+import { RemindMenu } from "./RemindMenu";
 import { MapViews } from "./MapViews";
 import { band, fold, type Mission } from "./useMissions";
 
 type Area = string; // city id, or "CITIZEN"
 type Sort = "needed" | "nearest";
-type Near = { state: "idle" | "locating" | "none" } | { state: "fix"; lat: number; lon: number };
+type Near = { state: "idle" | "locating" | "none" } | { state: "fix"; lat: number; lon: number; accuracyM: number };
 
 export interface MissionsProps {
   missions: Mission[];
@@ -33,14 +34,37 @@ export function MissionsView({ missions, simulated, adopted, draft, draftTotalSt
   const [sort, setSort] = useState<Sort>("needed");
   const [near, setNear] = useState<Near>({ state: "idle" });
 
-  const chooseSort = async (s: Sort) => {
-    setSort(s);
-    if (s === "nearest" && near.state !== "fix") {
-      setNear({ state: "locating" });
-      const p = await getPosition();
-      setNear(p ? { state: "fix", lat: p.lat, lon: p.lon } : { state: "none" });
+  /** Get the position, show it on the map and list the nearest missions. */
+  const locate = async (switchToNearest = true) => {
+    setNear({ state: "locating" });
+    const p = await getPosition();
+    if (!p) {
+      setNear({ state: "none" });
+      return;
+    }
+    setNear({ state: "fix", lat: p.lat, lon: p.lon, accuracyM: p.accuracyM });
+    // Only switch the list when there is a mission within 50 km; far away, just show the dot.
+    const close = missions.some((m) => distanceM(p.lat, p.lon, m.site.lat, m.site.lon) < 50_000);
+    if (switchToNearest && close) {
+      setSort("nearest");
+      setSelected(null);
     }
   };
+
+  const chooseSort = async (s: Sort) => {
+    setSort(s);
+    if (s === "nearest" && near.state !== "fix") await locate();
+  };
+
+  // If location was already allowed once, show it straight away (no permission prompt).
+  useEffect(() => {
+    let alive = true;
+    navigator.permissions?.query({ name: "geolocation" }).then((st) => {
+      if (alive && st.state === "granted") void locate();
+    }).catch(() => { /* not supported */ });
+    return () => { alive = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const q = fold(query.trim());
   const listed = useMemo(() => {
@@ -69,9 +93,15 @@ export function MissionsView({ missions, simulated, adopted, draft, draftTotalSt
 
   return (
     <>
-      <div className="map-wrap">
-        <MapViews missions={current ? [current, ...listed.filter((m) => m !== current)] : listed} selected={current} onSelect={setSelected} label={t("missions.mapLabel")} />
-      </div>
+      <MapViews
+        missions={current ? [current, ...listed.filter((m) => m !== current)] : listed}
+        selected={current}
+        onSelect={setSelected}
+        label={t("missions.mapLabel")}
+        me={near.state === "fix" ? { lat: near.lat, lon: near.lon, accuracyM: near.accuracyM } : null}
+        locating={near.state === "locating"}
+        onLocate={() => void locate()}
+      />
       <section className="sheet" aria-label={t("nav.missions")}>
         {current ? (
           <MissionDetail mission={current} adopted={adopted === current.site.code} onAdopt={onAdopt} onStart={() => onStart(current)} onClose={() => setSelected(null)} />
@@ -207,15 +237,11 @@ function MissionDetail({ mission, adopted, onAdopt, onStart, onClose }: { missio
   const [toast, setToast] = useState<string | null>(null);
   const [manualLink, setManualLink] = useState(false);
   const link = missionLink(location.href, site.code, lang);
-  const remind = () =>
-    downloadIcs(
-      `streamkeepers-${site.code}.ics`,
-      reminderIcs({
-        siteCode: site.code, siteName: site.name, lat: site.lat, lon: site.lon, url: link, now: new Date(), seasonal: adopted,
-        title: t("remind.title", { site: site.name }),
-        description: adopted ? t("remind.descSeason", { site: site.name }) : t("remind.descOnce", { site: site.name, n: value.points }),
-      }),
-    );
+  const reminder: ReminderInput = {
+    siteCode: site.code, siteName: site.name, lat: site.lat, lon: site.lon, url: link, now: new Date(), seasonal: adopted,
+    title: t("remind.title", { site: site.name }),
+    description: adopted ? t("remind.descSeason", { site: site.name }) : t("remind.descOnce", { site: site.name, n: value.points }),
+  };
   const invite = async () => {
     const r = await shareLink({ title: "StreamKeepers", text: t("share.text", { site: site.name, n: value.points }), url: link });
     if (r === "copied") {
@@ -253,10 +279,7 @@ function MissionDetail({ mission, adopted, onAdopt, onStart, onClose }: { missio
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="2.5" /><path d="M9.5 21v-6l-1-1V10a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v4l-1 1v6M5 18c-1.8.6-3 1.4-3 2.2C2 21.8 6.5 23 12 23s10-1.2 10-2.8c0-.8-1.2-1.6-3-2.2" /></svg>
           {t("detail.streetView")}
         </a>
-        <button className="btn btn-soft" onClick={remind}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4M12 13v4M10 15h4" /></svg>
-          {t("detail.remind")}
-        </button>
+        <RemindMenu reminder={reminder} label={t("detail.remind")} />
         <button className="btn btn-soft" onClick={invite}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5M19 8v6M16 11h6" /></svg>
           {t("detail.invite")}

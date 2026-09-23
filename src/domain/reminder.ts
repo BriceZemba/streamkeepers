@@ -86,3 +86,38 @@ export function missionLink(base: string, siteCode: string, lang: string): strin
   u.searchParams.set("lang", lang);
   return u.toString();
 }
+
+const isoLocal = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:00`;
+
+/** Google Calendar "create event" link (opens the app or web calendar, no file). */
+export function googleCalendarUrl(r: ReminderInput): string {
+  const start = nextSaturdayMorning(r.now);
+  const end = new Date(start.getTime() + 30 * 60_000);
+  const p = new URLSearchParams({
+    action: "TEMPLATE",
+    text: r.title,
+    dates: `${localStamp(start)}/${localStamp(end)}`,
+    details: `${r.description}
+${r.url}`,
+    location: `${r.siteName} (${r.lat.toFixed(5)}, ${r.lon.toFixed(5)})`,
+  });
+  if (r.seasonal) p.set("recur", "RRULE:FREQ=MONTHLY;INTERVAL=3;COUNT=8");
+  return `https://calendar.google.com/calendar/render?${p.toString()}`;
+}
+
+/** Outlook.com "compose event" link. Outlook links can't carry a repeat rule. */
+export function outlookCalendarUrl(r: ReminderInput): string {
+  const start = nextSaturdayMorning(r.now);
+  const end = new Date(start.getTime() + 30 * 60_000);
+  const p = new URLSearchParams({
+    path: "/calendar/action/compose",
+    rru: "addevent",
+    subject: r.title,
+    startdt: isoLocal(start),
+    enddt: isoLocal(end),
+    body: `${r.description}
+${r.url}`,
+    location: r.siteName,
+  });
+  return `https://outlook.live.com/calendar/0/deeplink/compose?${p.toString()}`;
+}
