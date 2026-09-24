@@ -19,6 +19,7 @@ import { Mark } from "./ui/glyphs";
 import { KeeperView, type Settings } from "./ui/KeeperView";
 import { MissionsView } from "./ui/MissionsView";
 import { ResultView } from "./ui/ResultView";
+import { Welcome, welcomeSeen } from "./ui/Welcome";
 import { useOnline, useTheme } from "./ui/theme";
 import { useMissions, type Mission } from "./ui/useMissions";
 
@@ -66,6 +67,7 @@ export default function App() {
   // Streams proposed on this phone join the OAH sites (rejected ones disappear).
   const extraSites = useMemo(() => proposed.filter((p) => p.status !== "rejected").map(toFacts), [proposed]);
   const siteMap = useMemo(() => new Map([...STATIC_SITES, ...extraSites].map((s) => [s.code, s])), [extraSites]);
+  const [welcome, setWelcome] = useState(() => !welcomeSeen() && !new URLSearchParams(location.search).has("coordinator"));
   const syncingRef = useRef(syncing);
   syncingRef.current = syncing;
 
@@ -73,6 +75,8 @@ export default function App() {
   const counts = useMemo(() => checksThisSeason(checks, now, settings.simulated), [checks, now, settings.simulated]);
   const missions = useMissions(counts, now, streak.dueThisSeason ? keeper.adopted ?? null : null, extraSites);
   const siteName = (code: string) => siteMap.get(code)?.name ?? code;
+  // The welcome's example: the Coimbra mission worth the most right now (Coimbra opens by default).
+  const example = useMemo(() => missions.filter((m) => m.site.cityId === "CO").sort((a, b) => b.value.points - a.value.points)[0] ?? null, [missions]);
 
   const setSettings = (s: Settings) => {
     setSettingsState(s);
@@ -182,6 +186,9 @@ export default function App() {
         <header className="topbar">
           <span className="brand"><Mark /><span className="brand-name">StreamKeepers</span></span>
           <span className="top-actions">
+            <button className="icon-btn" onClick={() => setWelcome(true)} aria-label={t("welcome.help")} title={t("welcome.help")}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.8" /><circle cx="12" cy="17" r="0.6" fill="currentColor" /></svg>
+            </button>
             <button className="icon-btn" onClick={nextLang} aria-label={t("lang.switch", { current: LANGS[langIdx].name, next: nextL.name })} title={t("lang.switch", { current: LANGS[langIdx].name, next: nextL.name })}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z" /></svg>
               {LANGS[langIdx].short}
@@ -199,6 +206,15 @@ export default function App() {
       )}
       {!online && <div className="banner banner-offline" role="status">⚡ {t("app.offline")}</div>}
       {settings.practice && !inCheck && <div className="banner banner-practice">◎ {t("app.practiceBanner")}</div>}
+
+      {welcome && !inCheck && (
+        <Welcome
+          practice={settings.practice}
+          example={example ? { name: example.site.name } : null}
+          onClose={() => setWelcome(false)}
+          onExample={() => { setWelcome(false); if (example) setScreen({ name: "missions", focus: example.site.code }); }}
+        />
+      )}
 
       <main id="main">
         {screen.name === "missions" && (

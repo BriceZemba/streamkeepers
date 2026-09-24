@@ -421,3 +421,26 @@ main { flex: 1; display: flex; flex-direction: column; }
   .cards { grid-template-columns: 1fr 1fr; }
   .opt { min-height: 108px; padding: 12px; }
 }
+
+/* First-visit welcome */
+.welcome-backdrop { position: fixed; inset: 0; z-index: 2000; display: flex; align-items: flex-end; justify-content: center; background: rgba(16, 26, 22, 0.5); backdrop-filter: blur(2px); }
+.welcome { position: relative; width: 100%; max-width: 520px; max-height: 92vh; overflow-y: auto; background: var(--paper); color: var(--ink); border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: var(--shadow-lg); padding: 22px 20px calc(18px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 10px; outline: none; }
+.welcome h2 { font-size: 1.5rem; padding-right: 36px; }
+.welcome-lead { margin: 0; line-height: 1.45; }
+.welcome-x { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--card); color: var(--ink); font-size: 1.4rem; line-height: 1; cursor: pointer; }
+.welcome-steps { list-style: none; margin: 4px 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.welcome-steps li { display: flex; gap: 12px; align-items: flex-start; line-height: 1.4; font-size: 0.95rem; color: var(--ink-2); }
+.welcome-steps strong { color: var(--ink); }
+.welcome-n { flex: none; width: 30px; height: 30px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: var(--ochre-soft); color: var(--ochre-deep); font-family: var(--serif); font-weight: 650; }
+.welcome-practice { margin: 0; padding: 8px 12px; border-radius: var(--r-sm); background: var(--ochre-soft); color: var(--ochre-deep); }
+@media (min-width: 640px) { .welcome-backdrop { align-items: center; } .welcome { border-radius: var(--r-lg); } }
+
+/* Phone widths: keep the header (brand + help, language, theme) inside the screen. */
+@media (max-width: 440px) {
+  .topbar { padding: 12px 14px; gap: 8px; }
+  .brand { gap: 8px; }
+  .brand-name { font-size: 1.08rem; }
+  .top-actions { gap: 5px; }
+  .icon-btn { min-width: 40px; padding: 0 8px; }
+  .lang-dots { display: none; }
+}
