@@ -1,22 +1,24 @@
 # User test results
 
-Protocol: [docs/TESTING.md](../docs/TESTING.md), section 3. Two waves: wave 1 on the deployed app, then fixes, then wave 2 on the fixed app. Results of the two waves are reported separately and never merged.
+Protocol: [docs/TESTING.md](../docs/TESTING.md), section 3. Two waves: wave 1 on the deployed app, then fixes, then wave 2 on the fixed app with different people. Results of the two waves are reported separately and never merged.
+
+**Wave 1 was informal:** the author showed the app over a video call without the task script, timings or SUS questionnaire. It gives qualitative findings only; the measured results come from wave 2.
 
 | Wave | Date | App version (commit) | n | Mode |
 |---|---|---|---|---|
-| 1 | 2026-09-25 | a3b57d3 | [FILL] | [FILL: remote video call / in person / unmoderated] |
-| 2 | 2026-09-27 | [FILL] | [FILL] | [FILL] |
+| 1 | 2026-09-24 | a3b57d3 | 2 | Remote video call (Google Meet), informal: no timed tasks, no SUS |
+| 2 | 2026-09-25 to 2026-09-27 | 8c8018e or later | [FILL] | [FILL] |
 
-No names. P1…P8. Participants are [FILL: e.g. friends, family, classmates] of the author, which likely makes scores kinder than those of strangers.
+No names. P1…P8. Wave 1 participants are friends of the author; wave 2: [FILL]. People known to the author, which likely makes scores kinder than those of strangers.
 
 ## Participants
 
 | P | Wave | Mode | Age range | Used a citizen-science or nature app before? | Phone | Language used |
 |---|---|---|---|---|---|---|
-| P1 | 1 | | | | | |
-| P2 | 1 | | | | | |
-| P3 | 1 | | | | | |
-| P4 | 1 | | | | | |
+| P1 | 1 | Meet | 23 | No | | French |
+| P2 | 1 | Meet | 24 | No | | French |
+| P3 | 2 | | | | | |
+| P4 | 2 | | | | | |
 | P5 | 2 | | | | | |
 | P6 | 2 | | | | | |
 | P7 | 2 | | | | | |
@@ -33,8 +35,8 @@ Result codes: **OK** = done without help, **H** = done with help (a hint after 6
 
 | P | T1 | T1 time (s) | T2 | T3 | T3 time, stopwatch (s) | T3 time shown by the app (s) | T3 gate outcome | T4 | Hints given (what) |
 |---|---|---|---|---|---|---|---|---|---|
-| P1 | | | | | | | | | |
-| P2 | | | | | | | | | |
+| P1 | not run (informal session) | | | | | | | | |
+| P2 | not run (informal session) | | | | | | | | |
 | P3 | | | | | | | | | |
 | P4 | | | | | | | | | |
 | P5 | | | | | | | | | |
@@ -48,8 +50,8 @@ Answers 1 (strongly disagree) to 5 (strongly agree). Score = ((Q1−1)+(5−Q2)+
 
 | P | Q1 | Q2 | Q3 | Q4 | Q5 | Q6 | Q7 | Q8 | Q9 | Q10 | Score |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| P1 | | | | | | | | | | | |
-| P2 | | | | | | | | | | | |
+| P1 | not asked | | | | | | | | | | |
+| P2 | not asked | | | | | | | | | | |
 | P3 | | | | | | | | | | | |
 | P4 | | | | | | | | | | | |
 | P5 | | | | | | | | | | | |
@@ -61,8 +63,7 @@ Answers 1 (strongly disagree) to 5 (strongly agree). Score = ((Q1−1)+(5−Q2)+
 
 | P | Would go back next season (1–5) | Why | Anything that made you want to exaggerate or rush? | One thing to change |
 |---|---|---|---|---|
-| P1 | | | | |
-| P2 | | | | |
+| P1, P2 | not rated | "If this kind of activity appealed to them they would use it"; found it "very interesting" (reported by the author, both agreed) | not asked | nothing else (no further criticism) |
 | P3 | | | | |
 | P4 | | | | |
 | P5 | | | | |
@@ -76,19 +77,20 @@ One row per problem. Severity: **3** blocks the task, **2** slows or confuses, *
 
 | # | Problem | Seen with | Severity | Fixed before wave 2? (commit) |
 |---|---|---|---|---|
-| 1 | | | | |
+| 1 | Opening the app with no explanation, they didn't know what to expect or what to do, and struggled until the author explained. Once explained, both understood at once and said the app is "very easy to use". | P1, P2 | 3 | Yes: first-visit welcome with the 3 steps (pick a stream, look and answer, earn the points), an example mission, and a "How it works" button to reopen it. Commit 8c8018e |
+| 2 | (Found by the author while fixing #1, not by testers.) On 360–375 px phones the header was wider than the screen, so the page could scroll sideways. | – | 2 | Yes: compact header on phones. Same commit |
 
 ## Summary
 
 | | Wave 1 | Wave 2 |
 |---|---|---|
-| n | [FILL] | [FILL] |
-| T3 (full check) completed without help | [FILL] / n | [FILL] / n |
-| T3 median time (range) | [FILL] | [FILL] |
-| T1+T2+T4 understood without help | [FILL] / 3n | [FILL] / 3n |
-| SUS median (range) | [FILL] | [FILL] |
-| Would go back next season, median | [FILL] | [FILL] |
+| n | 2 (informal) | [FILL] |
+| T3 (full check) completed without help | not measured | [FILL] / n |
+| T3 median time (range) | not measured | [FILL] |
+| T1+T2+T4 understood without help | not measured; 0/2 knew what to do before the explanation | [FILL] / 3n |
+| SUS median (range) | not measured | [FILL] |
+| Would go back next season, median | not rated (both: "would use it if this kind of activity appealed to them") | [FILL] |
 
-Changes made between the waves: [FILL: list, with commits].
+Changes made between the waves: first-visit welcome screen and compact phone header (problems 1 and 2), commit 8c8018e.
 
-Limits: small sample, participants known to the author, practice mode (nobody was standing at a real stream), remote sessions.
+Limits: small sample, wave 1 informal and reported by the author, participants known to the author, practice mode (nobody was standing at a real stream), remote sessions.
