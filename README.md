@@ -6,6 +6,8 @@ OneAquaHealth IEEE Global Hackathon 2026 · **Track 5: Community & Gamification*
 
 **[Open the app](https://streamkeepers.vercel.app/?practice=1)** · [Português](https://streamkeepers.vercel.app/?practice=1&lang=pt) · [Français](https://streamkeepers.vercel.app/?practice=1&lang=fr) · Demo video: [FILL: link] · [Simulation results](eval/sim_results.md)
 
+**Built on OneAquaHealth tools:** the OneAquaHealth / ENORA public data API, the OneAquaHealth FHIR Implementation Guide (HL7 Europe), and the official HL7 FHIR validator. [What each one does ↓](#oneaquahealth-tools-and-standards-used)
+
 <p>
 <img src="docs/img/1-missions.png" width="19%" alt="Mission list: Mina Hospital worth 116 points, never checked this season">
 <img src="docs/img/2-mission.png" width="19%" alt="Mission page: every point explained">
@@ -31,6 +33,19 @@ The obvious fix is points per report, badges and a leaderboard. That rewards vol
 5. **Lets volunteers propose streams, without a way to farm points.** A proposed stream is checked for duplicates (another site within 150 m is suggested instead) and earns only the base 10 points until a coordinator approves it; approval gives it full mission points and creates it as a FHIR Location.
 6. **Gives coordinators a view of the season.** They accept or reject held checks with a reason (acceptance credits the points and creates the OneAquaHealth indicator data), approve proposed streams, see coverage by city, and get the unchecked high-risk sites to cover with a lab visit or an organised outing.
 7. **Stores every check and every review decision in the OneAquaHealth FHIR format** and confirms them by reading them back, not by trusting the server's "OK".
+
+## OneAquaHealth tools and standards used
+
+No API keys are needed: every source below is public.
+
+| Tool | What StreamKeepers does with it |
+|---|---|
+| **OneAquaHealth / ENORA public API** (`api.enora-oah.eu`) | Source of the 106 research sites and 69 citizen sites, the lab health-risk components (pathogens, faecal indicators, antibiotic-resistance genes), land use around each site, and the official answer vocabularies of the citizen app. Sets every mission's points, writes "What we know about this site", and gives the check its questions and codes. Snapshotted with SHA-256 by `npm run snapshot`. |
+| **OneAquaHealth Citizen Science App protocol** | The guided check asks the same questions with the same answer codes, so StreamKeepers checks can sit next to the app's own data. |
+| **OneAquaHealth FHIR Implementation Guide** (`hl7-eu/oah`, HL7 Europe) | Every check is written as FHIR R4: accepted checks become `observation-indicators-oah` Observations at a `location-oah` Location; review decisions become Provenance. |
+| **OneAquaHealth FHIR sandbox** (HL7 Europe) | The default FHIR server. Unreachable since 23 September 2026, so practice checks fall back to the public HAPI R4 test server, labelled as test data. |
+| **Official HL7 FHIR validator** | Validates our FHIR output against FHIR R4, the OneAquaHealth IG and our own definitions: 0 errors, 0 warnings. |
+| **OneAquaHealth Community** | The Journal links each adopted stream to its group there, instead of building a separate social network. |
 
 ## Evidence
 

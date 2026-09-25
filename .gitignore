@@ -25,3 +25,7 @@ dist-ssr
 
 .vercel
 eval/fhir/validation.log
+
+# Secrets (none are needed today; keep any future keys out of git)
+.env
+.env.*
