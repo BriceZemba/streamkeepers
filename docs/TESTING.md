@@ -28,6 +28,8 @@ Things to try:
 - Map views (top right of the map): **Plan**, **Satellite** and **3D** relief. Mission page: **Street View** opens Google Street View at the site.
   3D uses MapLibre 6, whose worker only loads in a production build. To try 3D locally run `npm run build && npm run preview` (the dev server shows an empty 3D map).
 
+- Start over from a known state: open `?demo-reset` (it asks first, then deletes the checks, drafts and proposed streams in this browser and sets English, light theme, practice mode and simulated activity on). It never creates checks.
+
 Automated checks:
 
 ```bash
