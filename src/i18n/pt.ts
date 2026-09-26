@@ -143,7 +143,7 @@ export const pt: Record<string, string> = {
   "detail.copied": "Link copiado",
   "detail.copyThis": "Copie este link:",
   "remind.title": "StreamKeepers: verificar {site}",
-  "remind.descOnce": "Uma verificação em {site} vale agora {n} pontos. Cerca de 3 minutos.",
+  "remind.descOnce": "Uma verificação em {site} vale agora {n} pontos. Poucos minutos.",
   "remind.descSeason": "Verificação sazonal da sua ribeira adotada {site}: continua a série temporal e mantém a sua sequência.",
   "share.text": "Ajude a verificar {site} para o OneAquaHealth: 3 minutos, vale agora {n} pontos.",
   "journal.remindSeason": "Adicionar lembrete sazonal",

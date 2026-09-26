@@ -144,7 +144,7 @@ export const en: Record<string, string> = {
   "detail.copied": "Link copied",
   "detail.copyThis": "Copy this link:",
   "remind.title": "StreamKeepers: check {site}",
-  "remind.descOnce": "A stream check at {site} is worth {n} points right now. About 3 minutes.",
+  "remind.descOnce": "A stream check at {site} is worth {n} points right now. A few minutes.",
   "remind.descSeason": "Seasonal check of your adopted stream {site}: it continues its time series and keeps your streak.",
   "share.text": "Help check {site} for OneAquaHealth: a 3-minute stream check, worth {n} points right now.",
   "journal.remindSeason": "Add seasonal reminder",
