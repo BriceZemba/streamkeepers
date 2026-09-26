@@ -1,5 +1,7 @@
 # StreamKeepers
 
+[![CI](https://github.com/BriceZemba/streamkeepers/actions/workflows/ci.yml/badge.svg)](https://github.com/BriceZemba/streamkeepers/actions/workflows/ci.yml)
+
 **Citizen-science points that follow what OneAquaHealth needs to know, not how many reports people file.**
 
 OneAquaHealth IEEE Global Hackathon 2026 · **Track 5: Community & Gamification**
