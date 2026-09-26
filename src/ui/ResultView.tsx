@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import type { StoredCheck } from "../domain/store";
 import { FHIR_SERVERS } from "../fhir/client";
 import { useI18n } from "../i18n";
@@ -15,6 +16,9 @@ export function ResultView({ check, siteName, syncing, online, streak, onRetry, 
   const { t, tm } = useI18n();
   const accepted = check.gate.outcome === "ACCEPTED";
   const pts = accepted ? check.creditedPoints : check.missionPoints;
+  // The check is sent from the bottom of a long review screen: start the result at the top,
+  // so the points stamp is the first thing seen.
+  useEffect(() => { window.scrollTo({ top: 0 }); }, [check.id]);
   return (
     <section className="result" aria-labelledby="res-h">
       <div className="stamp-stage" aria-hidden="true">
