@@ -8,7 +8,7 @@ OneAquaHealth IEEE Global Hackathon 2026 · **Track 5: Community & Gamification*
 
 **In a simulation on the real OneAquaHealth sites, 23% fewer streams go unchecked in a season than with classic points per report** ([how it was measured](eval/sim_results.md)). In a small user test (5 people), the usability score was 75 and nobody felt pushed to exaggerate ([results](eval/user_test.md)).
 
-**[Open the app](https://streamkeepers.vercel.app/?practice=1)** · [Português](https://streamkeepers.vercel.app/?practice=1&lang=pt) · [Français](https://streamkeepers.vercel.app/?practice=1&lang=fr) · Demo video: [FILL: link] · [Simulation results](eval/sim_results.md)
+**[Open the app](https://streamkeepers.vercel.app/?practice=1)** · [Português](https://streamkeepers.vercel.app/?practice=1&lang=pt) · [Français](https://streamkeepers.vercel.app/?practice=1&lang=fr) · **[Demo video (3:25)](https://youtu.be/LOz3AfExt5E)** · [Simulation results](eval/sim_results.md)
 
 **Built on OneAquaHealth tools:** the OneAquaHealth / ENORA public data API, the OneAquaHealth FHIR Implementation Guide (HL7 Europe), and the official HL7 FHIR validator. [What each one does ↓](#oneaquahealth-tools-and-standards-used)
 
