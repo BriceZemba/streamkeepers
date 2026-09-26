@@ -284,7 +284,11 @@ function MissionDetail({ mission, adopted, onAdopt, onStart, onClose }: { missio
   useEffect(() => {
     ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [site.code]);
-  const parts = value.parts.filter((p) => p.points > 0 || p.key === "coverage" || p.key === "proposed");
+  // "Already checked this season" goes first: it is the main reason a busy site is worth little,
+  // and testers missed it at the bottom of the list.
+  const parts = value.parts
+    .filter((p) => p.points > 0 || p.key === "coverage" || p.key === "proposed")
+    .sort((a, b) => Number(b.key === "coverage") - Number(a.key === "coverage"));
   const directions = `https://www.google.com/maps/dir/?api=1&destination=${site.lat},${site.lon}&travelmode=walking`;
   // Opens Google Street View at the site (no API key needed); useful to check access before going.
   const streetView = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${site.lat},${site.lon}`;

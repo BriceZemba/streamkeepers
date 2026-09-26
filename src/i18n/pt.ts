@@ -391,7 +391,7 @@ export const pt: Record<string, string> = {
   "reason.peopleHigh": "Vive mais gente perto desta água do que em {pct}% dos locais OAH",
   "reason.peopleLow": "Há pessoas a viver perto desta água",
   "reason.adopted": "A sua ribeira adotada: a verificação desta estação continua a série temporal",
-  "reason.coverage": "Já verificada {n}× nesta estação, por isso esta visita acrescenta menos (necessidade × {factor})",
+  "reason.coverage": "Já verificada {n}× nesta estação: mais uma verificação diz pouco de novo ao OneAquaHealth, por isso tudo o que vai além dos {base} pontos de base é reduzido (× {factor})",
 
   // Quality gate
   "gate.complete.missing": "{n} pergunta(s) sem resposta.",

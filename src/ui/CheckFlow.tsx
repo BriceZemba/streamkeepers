@@ -31,13 +31,16 @@ export function CheckFlow({ mission, practice, resume, onSubmit, onCancel }: {
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
+    // Practice mode doesn't check the location, so don't ask the phone for it
+    // (a tester found the permission prompt unsettling for a check that doesn't use it).
+    if (practice) return;
     let alive = true;
     getPosition().then((p) => {
       if (!alive) return;
       setGps(p ? { state: "fix", distanceM: distanceM(p.lat, p.lon, mission.site.lat, mission.site.lon) } : { state: "none" });
     });
     return () => { alive = false; };
-  }, [mission.site.lat, mission.site.lon]);
+  }, [practice, mission.site.lat, mission.site.lon]);
 
   // Autosave, so a closed tab or a dead battery doesn't lose the check.
   useEffect(() => {

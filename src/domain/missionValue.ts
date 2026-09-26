@@ -144,8 +144,8 @@ export function missionValue(
     parts.push({
       key: "coverage",
       points: 0,
-      reason: `Already checked ${activity.checksThisSeason}× this season, so this visit adds less (need × ${coverage.toFixed(2)})`,
-      msg: { key: "reason.coverage", params: { n: activity.checksThisSeason, factor: coverage.toFixed(2) } },
+      reason: `Already checked ${activity.checksThisSeason}× this season: one more check tells OneAquaHealth little new, so everything above the ${w.base} base points is reduced (× ${coverage.toFixed(2)})`,
+      msg: { key: "reason.coverage", params: { n: activity.checksThisSeason, factor: coverage.toFixed(2), base: w.base } },
     });
   }
   // The total is the exact sum of the rounded parts shown, so the ledger always adds up.

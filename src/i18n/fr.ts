@@ -389,7 +389,7 @@ export const fr: Record<string, string> = {
   "reason.peopleHigh": "Plus d'habitants près de cette eau qu'autour de {pct} % des sites OAH",
   "reason.peopleLow": "Des gens vivent près de cette eau",
   "reason.adopted": "Votre cours d'eau adopté : le relevé de cette saison prolonge sa série de données",
-  "reason.coverage": "Déjà vérifié {n}× cette saison, cette visite apporte donc moins (besoin × {factor})",
+  "reason.coverage": "Déjà vérifié {n}× cette saison : un relevé de plus apprend peu de neuf à OneAquaHealth, donc tout ce qui dépasse les {base} points de base est réduit (× {factor})",
 
   "gate.complete.missing": "{n} question(s) sans réponse.",
   "gate.complete.unsure": "{n} réponses sur {total} sont « pas sûr ». Pas de souci, mais un relecteur va regarder.",
