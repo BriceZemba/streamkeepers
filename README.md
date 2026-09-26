@@ -60,6 +60,7 @@ Every number below comes from a script in this repository; nothing is hand-typed
 | Checks are stored as OneAquaHealth FHIR and verified | An accepted check becomes 11 FHIR resources (QuestionnaireResponse, 7 `observation-indicators-oah` Observations, Location, Questionnaire, Practitioner); each is read back with a separate GET and compared. Reused resources are not duplicated. | `npm run fhir:smoke`, [`eval/fhir_smoke_last.json`](eval/fhir_smoke_last.json), [`src/fhir/mapping.test.ts`](src/fhir/mapping.test.ts) |
 | The FHIR output is valid | **0 errors, 0 warnings** with the official HL7 validator, against FHIR R4, the OneAquaHealth IG and the StreamKeepers definitions in [`fhir/`](fhir/), on an accepted check, a held check and a reviewer decision. The first run found 5 errors per file; all fixed and documented. | [`eval/fhir/validation-summary.md`](eval/fhir/validation-summary.md), [docs/FHIR-VALIDATION.md](docs/FHIR-VALIDATION.md), `npm run fhir:validate` |
 | Reviewer decisions are recorded in FHIR | Accepting a held check writes the `observation-indicators-oah` Observations, derived from the stored QuestionnaireResponse, plus a Provenance naming the reviewer as verifier; rejecting writes a Provenance with the reason. Checked on the live server by independent reads. | [`src/fhir/review.test.ts`](src/fhir/review.test.ts) |
+| People can use it (user test, 5 people) | System Usability Scale median **75** (60–82.5; 68 is the usual average). 5/5 completed a full stream check and all 5 checks passed the quality check at once; **0/5 felt pushed to exaggerate or rush**. Weak point: nobody could say without a hint why a busy site is worth little (now explained first, in plain words; not re-tested). Would go back next season: median 3 of 5. | [`eval/user_test.md`](eval/user_test.md): every answer, the problems found and the fixes |
 | Every screen works in English, Portuguese and French | A test fails if any question, answer, reason or message is missing a translation or a placeholder. | [`src/i18n/coverage.test.ts`](src/i18n/coverage.test.ts) |
 
 `npm test` runs 57 tests.
@@ -140,7 +141,7 @@ flowchart LR
 - **A gap in the IG:** `observation-indicators-oah` fixes `status = final`, so there is no place for unreviewed citizen data. StreamKeepers keeps held checks as QuestionnaireResponses until a reviewer confirms them.
 - **The coordinator view reads checks stored on the device** in this prototype (plus the labelled simulated activity). In a deployment it would read the same QuestionnaireResponses from the OneAquaHealth FHIR server; reviewers would need an account there.
 - **Not built:** volunteer accounts, a separate social network (the app links to the OneAquaHealth Community groups instead), push notifications (calendar reminders instead).
-- **User testing:** [FILL: n testers, SUS score, median time per check, from eval/user_test.md].
+- **User testing is small:** 5 people aged 19–27, all known to the author, remote, in practice mode; one tester's check was timed (92 s). The explanation of why a busy site is worth little was fixed after the test and has not been re-tested.
 
 ## Credits and licence
 
