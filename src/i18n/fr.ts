@@ -145,7 +145,7 @@ export const fr: Record<string, string> = {
   "remind.title": "StreamKeepers : vérifier {site}",
   "remind.descOnce": "Un relevé à {site} vaut en ce moment {n} points. Quelques minutes.",
   "remind.descSeason": "Relevé de saison de votre cours d'eau adopté {site} : il prolonge sa série de données et votre série.",
-  "share.text": "Aidez à vérifier {site} pour OneAquaHealth : un relevé de 3 minutes, {n} points en ce moment.",
+  "share.text": "Aidez à vérifier {site} pour OneAquaHealth : un relevé de quelques minutes, {n} points en ce moment.",
   "journal.remindSeason": "Ajouter un rappel de saison",
   "journal.remindHint": "Ajoute un événement à l'agenda de votre téléphone à chaque saison, avec un lien vers ce cours d'eau. Sans compte ni autorisation de notifications.",
   "journal.community": "Trouvez ou créez le groupe de ce cours d'eau sur la Communauté OneAquaHealth",

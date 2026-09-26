@@ -146,7 +146,7 @@ export const en: Record<string, string> = {
   "remind.title": "StreamKeepers: check {site}",
   "remind.descOnce": "A stream check at {site} is worth {n} points right now. A few minutes.",
   "remind.descSeason": "Seasonal check of your adopted stream {site}: it continues its time series and keeps your streak.",
-  "share.text": "Help check {site} for OneAquaHealth: a 3-minute stream check, worth {n} points right now.",
+  "share.text": "Help check {site} for OneAquaHealth: a short stream check, worth {n} points right now.",
   "journal.remindSeason": "Add seasonal reminder",
   "journal.remindHint": "Adds an event to your phone's calendar each season, with a link back to this stream. No account or notification permission needed.",
   "journal.community": "Find or start this stream's group on the OneAquaHealth Community",
