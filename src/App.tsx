@@ -292,7 +292,7 @@ export default function App() {
       </main>
 
       {!inCheck && (
-        <nav className="tabbar" aria-label="Main">
+        <nav className="tabbar" aria-label={t("a11y.main")}>
           <button aria-current={screen.name !== "keeper" && screen.name !== "coordinator" ? "page" : undefined} onClick={() => setScreen({ name: "missions" })}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg>
             {t("nav.missions")}

@@ -26,7 +26,7 @@ export function CoordinatorView({ checks, sites, counts, simulated, now, reviewi
   proposed: ProposedSite[];
   onDecideSite: (code: string, approve: boolean, reviewer: string) => void;
 }) {
-  const { t, lang, q: qText, opt } = useI18n();
+  const { t, lang, q: qText, opt, num } = useI18n();
   const locale = lang === "pt" ? "pt-PT" : lang === "fr" ? "fr-FR" : "en-GB";
   const [reviewer, setReviewer] = useState(readReviewer);
   const [rejecting, setRejecting] = useState<string | null>(null);
@@ -213,7 +213,7 @@ export function CoordinatorView({ checks, sites, counts, simulated, now, reviewi
             <li key={s.code}>
               <button className="mission" onClick={() => onOpenSite(s.code)}>
                 <span className={`token ${s.labRiskScore !== null && s.labRiskScore >= q3 ? "token-high" : "token-low"}`} aria-label={t("missions.labRisk", { score: s.labRiskScore?.toFixed(2) ?? "–" })}>
-                  <span>{s.labRiskScore?.toFixed(2) ?? "–"}<small>risk</small></span>
+                  <span>{s.labRiskScore !== null ? num(s.labRiskScore, 2) : "–"}<small>{t("coord.riskShort")}</small></span>
                 </span>
                 <span>
                   <span className="mission-title">{s.name}</span>

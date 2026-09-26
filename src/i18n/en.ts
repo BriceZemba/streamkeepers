@@ -275,4 +275,9 @@ export const en: Record<string, string> = {
   "welcome.explore": "Explore the map",
   "welcome.help": "How it works",
   "welcome.close": "Close",
+  "coord.riskShort": "risk",
+  "a11y.progress": "Progress",
+  "a11y.sort": "Sort",
+  "a11y.area": "City",
+  "a11y.main": "Main",
 };

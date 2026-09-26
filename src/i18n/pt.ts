@@ -426,4 +426,9 @@ export const pt: Record<string, string> = {
   "welcome.explore": "Explorar o mapa",
   "welcome.help": "Como funciona",
   "welcome.close": "Fechar",
+  "coord.riskShort": "risco",
+  "a11y.progress": "Progresso",
+  "a11y.sort": "Ordenar",
+  "a11y.area": "Cidade",
+  "a11y.main": "Navegação principal",
 };

@@ -4,6 +4,8 @@
 
 OneAquaHealth IEEE Global Hackathon 2026 · **Track 5: Community & Gamification**
 
+**In a simulation on the real OneAquaHealth sites, 23% fewer streams go unchecked in a season than with classic points per report** ([how it was measured](eval/sim_results.md)). In a small user test (5 people), the usability score was 75 and nobody felt pushed to exaggerate ([results](eval/user_test.md)).
+
 **[Open the app](https://streamkeepers.vercel.app/?practice=1)** · [Português](https://streamkeepers.vercel.app/?practice=1&lang=pt) · [Français](https://streamkeepers.vercel.app/?practice=1&lang=fr) · Demo video: [FILL: link] · [Simulation results](eval/sim_results.md)
 
 **Built on OneAquaHealth tools:** the OneAquaHealth / ENORA public data API, the OneAquaHealth FHIR Implementation Guide (HL7 Europe), and the official HL7 FHIR validator. [What each one does ↓](#oneaquahealth-tools-and-standards-used)
@@ -80,7 +82,7 @@ Things to look for:
 - **Mission page:** every point explained. Directions, Street View, a calendar reminder, invite a friend, adopt the stream. At the bottom: what the OneAquaHealth data says about the site.
 - **Propose a stream:** the **+** button on the map. Try placing it next to an existing site to see the duplicate check.
 - **A check in under 90 seconds** is held for review with points on hold. A careful one scores.
-- **Header:** language toggle (EN → PT → FR) and light/dark theme. **Map:** Plan, Satellite and 3D relief; Near me; enlarged map.
+- **Header:** language toggle (EN → PT → FR) and light/dark theme. **Map:** Map, Satellite and 3D relief; Near me; enlarged map.
 - **Coordinator view:** [streamkeepers.vercel.app/?coordinator](https://streamkeepers.vercel.app/?coordinator&practice=1) (or Journal → Coordinator view). Do a quick check first, then accept or reject it there.
 
 **Locally:**
@@ -123,7 +125,7 @@ flowchart LR
 | Resource | Profile / code | When |
 |---|---|---|
 | QuestionnaireResponse | answers with the official OAH app code systems; "none of these" and "not sure" are explicit codes | every check |
-| Observation | `observation-indicators-oah`, status `final`: `morophology`, `hydrology`, `foam`, `riparianVegetation`, `LandUse`, `invasiveOrganisms` | only checks that passed the quality check |
+| Observation | `observation-indicators-oah`, status `final`: `morophology` (the IG's own code, sic), `hydrology`, `foam`, `riparianVegetation`, `LandUse`, `invasiveOrganisms` | only checks that passed the quality check |
 | Location | `location-oah`, identifier = OAH site code (streams proposed in StreamKeepers get their own identifier system) | created once (conditional create); proposed streams on approval |
 | Practitioner | pseudonymous volunteer ID, no name | created once |
 | Questionnaire | the StreamKeepers form, versioned | created once |

@@ -151,7 +151,7 @@ export function MissionsView({ missions, simulated, adopted, draft, draftTotalSt
                 <span className="visually-hidden">{t("missions.search")}</span>
                 <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("missions.search")} enterKeyHint="search" />
               </label>
-              <div className="seg" role="group" aria-label="Sort">
+              <div className="seg" role="group" aria-label={t("a11y.sort")}>
                 <button aria-pressed={sort === "needed"} onClick={() => chooseSort("needed")}>{t("missions.sortNeeded")}</button>
                 <button aria-pressed={sort === "nearest"} onClick={() => chooseSort("nearest")}>{t("missions.sortNearest")}</button>
               </div>
@@ -161,7 +161,7 @@ export function MissionsView({ missions, simulated, adopted, draft, draftTotalSt
             {sort === "nearest" && near.state === "none" && <p className="info-line">{t("missions.noPosition")}</p>}
 
             {byAreaMode && (
-              <div className="areas" role="tablist" aria-label="Area">
+              <div className="areas" role="tablist" aria-label={t("a11y.area")}>
                 {[...CITIES.map((c) => ({ id: c.id, name: c.name })), { id: "CITIZEN", name: t("missions.citizenSites") }].map((c) => (
                   <button key={c.id} role="tab" aria-selected={area === c.id} className="area" onClick={() => { setArea(c.id); setSelected(null); }}>
                     {c.name}

@@ -132,7 +132,7 @@ main { flex: 1; display: flex; flex-direction: column; }
 .token-xl small { font-size: 0.62rem; }
 
 /* ---------- Mission detail ---------- */
-.detail { animation: rise 0.28s ease both; }
+.detail { animation: rise 0.28s ease both; scroll-margin-top: 76px; }
 .detail-head { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start; margin-bottom: 18px; }
 .detail-head h1 { margin: 6px 0 6px; }
 .back { display: inline-flex; align-items: center; gap: 6px; border: 0; background: none; color: var(--ink-2); font-weight: 600; padding: 6px 0; cursor: pointer; margin-bottom: 8px; }

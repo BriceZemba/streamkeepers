@@ -79,7 +79,7 @@ export function CheckFlow({ mission, practice, resume, onSubmit, onCancel }: {
         </div>
       </div>
 
-      <div className="stream-progress" role="progressbar" aria-label="Progress" aria-valuemin={0} aria-valuemax={steps.length} aria-valuenow={Math.min(stepIdx, steps.length)}>
+      <div className="stream-progress" role="progressbar" aria-label={t("a11y.progress")} aria-valuemin={0} aria-valuemax={steps.length} aria-valuenow={Math.min(stepIdx, steps.length)}>
         {steps.map((s, i) => <span key={s.id} className={i < stepIdx ? "done" : i === stepIdx ? "now" : ""} />)}
       </div>
       <p className="gps"><span className={`dot ${gpsLine.cls}`} aria-hidden="true" />{gpsLine.text}</p>

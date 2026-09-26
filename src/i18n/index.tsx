@@ -64,8 +64,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<I18n>(() => {
     const locale = lang === "pt" ? "pt-PT" : lang === "fr" ? "fr-FR" : "en-GB";
+    // Decimal numbers passed as text ("0.78") use the language's separator ("0,78" in pt and fr).
+    const local = (v: string | number) => (lang !== "en" && typeof v === "string" && /^-?\d+\.\d+$/.test(v) ? v.replace(".", ",") : String(v));
     const fill = (text: string, params?: Params) =>
-      params ? text.replace(/\{(\w+)\}/g, (_, k) => (params[k] !== undefined ? String(params[k]) : `{${k}}`)) : text;
+      params ? text.replace(/\{(\w+)\}/g, (_, k) => (params[k] !== undefined ? local(params[k]) : `{${k}}`)) : text;
     const t = (key: string, params?: Params, fallback?: string) => fill(DICTS[lang][key] ?? en[key] ?? fallback ?? key, params);
     const monthYear = (iso: string) => new Date(iso + "T00:00:00Z").toLocaleDateString(locale, { month: "short", year: "numeric", timeZone: "UTC" });
     return {

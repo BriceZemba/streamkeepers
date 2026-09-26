@@ -423,4 +423,9 @@ export const fr: Record<string, string> = {
   "welcome.explore": "Explorer la carte",
   "welcome.help": "Comment ça marche",
   "welcome.close": "Fermer",
+  "coord.riskShort": "risque",
+  "a11y.progress": "Progression",
+  "a11y.sort": "Tri",
+  "a11y.area": "Ville",
+  "a11y.main": "Navigation principale",
 };
